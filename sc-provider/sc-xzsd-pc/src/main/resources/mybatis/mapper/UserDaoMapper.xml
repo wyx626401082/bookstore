@@ -46,7 +46,7 @@
             0)
     </insert>
 
-    <!--    删除用户-->
+    <!-- 删除用户 -->
     <update id="deleteUser" parameterType="com.xzsd.pc.user.entity.UserDO">
         update t_sys_user
         set

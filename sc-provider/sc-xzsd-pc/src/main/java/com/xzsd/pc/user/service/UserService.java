@@ -2,6 +2,7 @@ package com.xzsd.pc.user.service;
 
 import com.neusoft.core.restful.AppResponse;
 import com.neusoft.util.StringUtil;
+import com.neusoft.webauth.utils.PasswordUtils;
 import com.xzsd.pc.user.dao.UserDao;
 import com.xzsd.pc.user.entity.UserDO;
 import com.xzsd.pc.user.entity.UserVO;
@@ -39,7 +40,10 @@ public class UserService {
         if(0 != countUserAcct) {
             return AppResponse.bizError("用户账号已存在，请重新输入！");
         }
+        //用户密码加密处理
+        String pwd = PasswordUtils.generatePassword(userDO.getUserPwd());
         userDO.setUserId(StringUtil.getCommonCode(2));
+        userDO.setUserPwd(pwd);
         userDO.setIsDeleted(0);
         int count = userDao.addUser(userDO);
         if(0 == count) {
@@ -80,6 +84,9 @@ public class UserService {
         if(0 != countUserAcct) {
             return AppResponse.success("用户账号已存在，请重新输入！");
         }
+        //用户密码加密处理
+        String pwd = PasswordUtils.generatePassword(userDO.getUserPwd());
+        userDO.setUserPwd(pwd);
         //修改用户信息
         int count = userDao.updateUserById(userDO);
         if(0 == count) {
@@ -103,14 +110,14 @@ public class UserService {
 
     /**
      * 查询用户详情
-     * @param userCode 被查询用户编号
+     * @param userId 被查询用户编号
      * @return
      * @author WangZeBin
      * @date 2020-03-27
      */
-    public AppResponse findUserById(String userCode) {
+    public AppResponse findUserById(String userId) {
         UserVO userVO = null;
-        userVO = userDao.findUserById(userCode);
+        userVO = userDao.findUserById(userId);
         if (userVO == null) {
             return AppResponse.notFound("无查询结果");
         }

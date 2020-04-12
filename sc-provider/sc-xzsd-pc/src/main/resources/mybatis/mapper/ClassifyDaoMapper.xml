@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xzsd.pc.classify.dao.ClassifyDao">
+
+    <!-- 新增商品分类 -->
+    <insert id="addClassify" parameterType="com.xzsd.pc.classify.entity.ClassifyDO">
+        insert into t_goods_classify
+            (class_code,
+             class_name,
+             parent_code,
+             remark,
+             is_deleted,
+             create_time,
+             create_by,
+             modify_time,
+             modify_by,
+             version)
+        values
+           (#{classId},
+            #{className},
+            #{classParent},
+            #{remark},
+            #{isDeleted},
+            now(),
+            #{createBy},
+            now(),
+            #{ModifyBy},
+            0)
+    </insert>
+
+    <!-- 删除商品分类 -->
+    <update id="deleteClassify" parameterType="com.xzsd.pc.classify.entity.ClassifyDO">
+        update t_goods_classify
+        set
+        is_deleted = 1,
+        modify_time = now(),
+        modify_by = #{userId},
+        version = version+1
+        where class_code in
+        <foreach item="item" index="index" collection="listId" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <!-- 修改商品分类 -->
+    <update id="updateClassifyById" parameterType="com.xzsd.pc.classify.entity.ClassifyDO">
+        update t_goods_classify
+        set
+            class_name = #{className},
+            remark = #{remark},
+            modify_by = #{modifyBy},
+            modify_time = now(),
+            version = version + 1
+        where
+            class_code = #{classId}
+        and
+            version = #{version}
+    </update>
+
+    <!-- 查询商品分类列表 -->
+
+    <!-- 查询商品分类详情 -->
+    <select id="findClassifyById" parameterType="java.lang.String" resultType="com.xzsd.pc.classify.entity.ClassifyVO">
+        select
+            class_name className,
+            remark
+        from t_goods_classify
+        where class_code = #{classId}
+        and is_deleted = 0
+    </select>
+
+</mapper>

@@ -3,7 +3,7 @@
 <mapper namespace="com.xzsd.pc.menu.dao.MenuDao">
     <!-- 查找相同菜单数目 -->
     <select id="countMenuSame" parameterType="com.xzsd.pc.menu.entity.MenuDO" resultType="int">
-        select count(menu_code)
+        select count(1)
         from t_sys_menu
         where
             menu_name = #{menuName}
@@ -85,6 +85,7 @@
         from t_sys_menu
         where
             is_deleted = 0
+        order by create_time desc
     </select>
 
     <!-- 查询菜单详情 -->

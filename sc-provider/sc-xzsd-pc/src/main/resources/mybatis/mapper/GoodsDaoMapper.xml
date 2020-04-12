@@ -217,6 +217,6 @@
         where
           parent_code = #{classId}
         and is_delete = 0
-        order by class_code desc
+        order by create_time desc
     </select>
 </mapper>

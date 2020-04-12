@@ -16,7 +16,7 @@ import javax.annotation.Resource;
 
 
 /**
- * 增删改查
+ * 用户管理增删改查
  * @author WangZeBin
  * @date 2020-03-25
  */
@@ -36,7 +36,7 @@ public class UserController {
      * @date 2020-03-25
      */
     @PostMapping("addUser")
-    public AppResponse addrUser(UserDO userDO) {
+    public AppResponse addUser(UserDO userDO) {
         try {
             //获取用户id
             String userId = SecurityUtils.getCurrentUserId();

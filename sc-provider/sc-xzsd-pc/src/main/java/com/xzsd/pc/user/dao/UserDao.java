@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 /**
+ * 用户管理接口
  * @author WangZeBin
  * @Date 2020-03-25
  */
