@@ -19,7 +19,7 @@ public class CustomerInfo {
     /**
      *用户编码
      */
-    private String customerNameId;
+    private String customerId;
     /**
      * 用户名称
      */
@@ -27,7 +27,7 @@ public class CustomerInfo {
     /**
      * 用户登录账号
      */
-    private String customerNameAcct;
+    private String customerAcct;
     /**
      * 身份证号码
      */
@@ -44,8 +44,76 @@ public class CustomerInfo {
      * 电子邮件
      */
     private String email;
-    /**
-     * 备注
-     */
-    private String remark;
+
+    public int getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(int pageSize) {
+        this.pageSize = pageSize;
+    }
+
+    public int getPageNum() {
+        return pageNum;
+    }
+
+    public void setPageNum(int pageNum) {
+        this.pageNum = pageNum;
+    }
+
+    public String getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(String customerId) {
+        this.customerId = customerId;
+    }
+
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
+
+    public String getCustomerAcct() {
+        return customerAcct;
+    }
+
+    public void setCustomerAcct(String customerAcct) {
+        this.customerAcct = customerAcct;
+    }
+
+    public String getIdCard() {
+        return idCard;
+    }
+
+    public void setIdCard(String idCard) {
+        this.idCard = idCard;
+    }
+
+    public int getSex() {
+        return sex;
+    }
+
+    public void setSex(int sex) {
+        this.sex = sex;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 }

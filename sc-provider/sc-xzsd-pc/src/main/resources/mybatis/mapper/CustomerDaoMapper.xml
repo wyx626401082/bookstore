@@ -14,11 +14,11 @@
         from t_sys_user
         where is_deleted = 0
         and role = 4
-        <if test="userAcct != null and userAcct != ''">
-            and user_acct like concat('%', #{userAcct}, '%')
+        <if test="customerAcct != null and customerAcct != ''">
+            and user_acct like concat('%', #{customerAcct}, '%')
         </if>
-        <if test="userName != null and userAcct != ''">
-            and user_name like concat('%', #{userName}, '%')
+        <if test="customerName != null and customerName != ''">
+            and user_name like concat('%', #{customerName}, '%')
         </if>
         order by create_time desc
     </select>

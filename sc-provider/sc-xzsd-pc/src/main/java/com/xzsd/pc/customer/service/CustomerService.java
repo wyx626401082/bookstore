@@ -28,7 +28,7 @@ public class CustomerService {
      * @date 2020-04-06
      */
     public AppResponse listCustomer(CustomerInfo customerInfo) {
-        List<CustomerInfo> customerInfoListList = customerDao.listCustomerByPage(customerInfo);
-        return AppResponse.success("查询成功！", getPageInfo(customerInfoListList));
+        List<CustomerInfo> customerInfoList = customerDao.listCustomerByPage(customerInfo);
+        return AppResponse.success("查询成功！", getPageInfo(customerInfoList));
     }
 }
