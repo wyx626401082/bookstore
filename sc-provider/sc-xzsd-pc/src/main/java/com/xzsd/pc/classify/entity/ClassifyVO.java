@@ -1,14 +1,8 @@
 package com.xzsd.pc.classify.entity;
 
+import java.util.List;
+
 public class ClassifyVO {
-    /**
-     *页码
-     */
-    private int pageSize;
-    /**
-     * 页数
-     */
-    private int pageNum;
     /**
      * 分类编号
      */
@@ -21,4 +15,52 @@ public class ClassifyVO {
      * 备注
      */
     private String remark;
+    /**
+     * 分类集合
+     */
+    private List<ClassifyVO> classTwoList;
+    /**
+     * 版本号
+     */
+    private String version;
+
+    public String getClassId() {
+        return classId;
+    }
+
+    public void setClassId(String classId) {
+        this.classId = classId;
+    }
+
+    public String getClassName() {
+        return className;
+    }
+
+    public void setClassName(String className) {
+        this.className = className;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
+    public List<ClassifyVO> getClassTwoList() {
+        return classTwoList;
+    }
+
+    public void setClassTwoList(List<ClassifyVO> classTwoList) {
+        this.classTwoList = classTwoList;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
 }

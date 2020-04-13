@@ -48,10 +48,14 @@ public class ClassifyService {
      */
     @Transactional(rollbackFor = Exception.class)
     public AppResponse deleteClassify(String classId, String userId) {
-        List<String> listId = Arrays.asList(classId.split(","));
         AppResponse appResponse = AppResponse.success("删除商品分类成功！");
+        int countChild = classifyDao.countClassifyChild(classId);
+        if(0 != countChild ) {
+            appResponse = AppResponse.success("该商品分类存在子分类，无法删除");
+            return appResponse;
+        }
         //删除商品分类
-        int count = classifyDao.deleteClassify(listId,userId);
+        int count = classifyDao.deleteClassify(classId,userId);
         if(0 == count) {
             appResponse = AppResponse.bizError("删除商品分类失败，请重试！");
         }
@@ -59,14 +63,14 @@ public class ClassifyService {
     }
 
     /**
-     * 修改商品信息
-     * @param classifyDO 商品信息集合
+     * 修改商品分类信息
+     * @param classifyDO 商品分类信息集合
      * @return
      */
     @Transactional(rollbackFor = Exception.class)
     public AppResponse updateClassifyById(ClassifyDO classifyDO) {
         AppResponse appResponse = AppResponse.success("修改商品分类成功");
-        //修改上牌费了信息
+        //修改商品分类信息
         int count = classifyDao.updateClassifyById(classifyDO);
         if(0 == count) {
             appResponse = AppResponse.versionError("数据有变化，请刷新！");
