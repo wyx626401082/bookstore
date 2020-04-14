@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xzsd.pc.banner.dao.BannerDao">
+
+    <!-- 统计轮播图各个排序数量 -->
+    <select id="countBannerNO" parameterType="int" resultType="int">
+        select count(1)
+        from t_sys_banner a
+        left join t_sys_banner b on a.banner_no = b.banner_no
+        where
+            a.is_deleted = 0
+        and a.banner_code in
+        <foreach collection="listId" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        and a.banner_code &lt;&gt; b.banner_code
+        <!-- 被选择轮播图的生效时间与已启用轮播图时间进行比较!(a.start>b.end or a.end<b.start) -->
+        and not ((a.start_time &gt; b.end_time)
+                or (a.end_time &lt; b.start_time))
+        and b.is_deleted = 0
+        and b.state = 1
+    </select>
+
+    <!-- 统计轮播图中的商品数量 -->
+    <select id="countGoodsId" parameterType="java.lang.String" resultType="int">
+        select count(1)
+        from t_sys_banner a
+        left join t_sys_banner b on a.goods_code = b.goods_code
+        where
+            a.is_deleted = 0
+        and a.banner_code in
+        <foreach collection="listId" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        and a.banner_code &lt;&gt; b.banner_code
+        <!-- 被选择轮播图的生效时间与已启用轮播图时间进行比较!(a.start>b.end or a.end<b.start) -->
+        and not ((a.start_time &gt; b.end_time)
+                or (a.end_time &lt; b.start_time))
+        and b.is_deleted = 0
+        and b.state = 1
+    </select>
+
+    <!-- 新增轮播图 -->
+    <insert id="addBanner" parameterType="com.xzsd.pc.banner.entity.BannerDO">
+        insert into t_sys_banner
+            (banner_code,
+             banner_url,
+             banner_no,
+             state,
+             goods_code,
+             start_time,
+             end_time,
+             is_deleted,
+             create_time,
+             create_by,
+             modify_time,
+             modify_by,
+             version)
+        values
+            (#{bannerId},
+             #{bannerUrl},
+             #{bannerNO},
+             0,
+             #{goodsId},
+             #{startTime},
+             #{endTime},
+             #{isDeleted},
+             now(),
+             #{createBy},
+             now(),
+             #{ModifyBy},
+             0)
+    </insert>
+
+    <!-- 删除轮播图信息 -->
+    <update id="deleteBanner" parameterType="com.xzsd.pc.banner.entity.BannerDO">
+        update t_sys_banner
+        set
+            is_deleted = 0,
+            state = 0,
+            modify_time = now(),
+            modify_by = #{userId},
+            version = version+1
+        where banner_code in
+        <foreach collection="listId" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <!-- 修改轮播图状态 -->
+    <update id="updateBannerById" >
+        update t_sys_banner
+        set
+            state = #{bannerState},
+            modify_time = now(),
+            modify_by = #{userId},
+            version = version+1
+        where banner_code in
+        <foreach collection="listId" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        and is_deleted = 0
+    </update>
+
+    <!-- 查询轮播图列表 -->
+    <select id="listBannerByPage" parameterType="com.xzsd.pc.banner.entity.BannerDO" resultType="com.xzsd.pc.banner.entity.BannerVO">
+        select
+            banner_code bannerId,
+            banner_no bannerNO,
+            banner_url bannerUrl,
+            start_time startTime,
+            end_time endTime,
+            version
+        from t_sys_banner
+        where is_deleted = 0
+        <if test="bannerState != null and bannerState != ''">
+            and state = #{bannerState}
+        </if>
+        order by create_time desc
+    </select>
+
+    <!-- 查询商品选择列表 -->
+    <select id="listGoodsByPage" parameterType="com.xzsd.pc.banner.entity.BannerDO" resultType="com.xzsd.pc.banner.entity.GoodsVO">
+        select
+            goods_code goodsId,
+            goods_name goodsName,
+            state goodsState,
+            ca.class_name classOneName,
+            cb.class_name classTwoName
+        from t_sys_goods tg
+        left join t_goods_classify ca on tg.class_one_code = ca.class_code
+        left join t_goods_classify cb on tg.class_two_code = cb.class_code
+        where
+            tg.is_deleted = 0
+        and state = 1
+        <if test="goodsName != null and goodsName != ''">
+            and goods_name = #{goodsName}
+        </if>
+        <if test="goodsId != null and goodsId != ''">
+            and goods_code = #{goodsId}
+        </if>
+        order by tg.create_time desc
+    </select>
+</mapper>
