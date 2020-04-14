@@ -3,6 +3,7 @@ package com.xzsd.pc.user.service;
 import com.neusoft.core.restful.AppResponse;
 //import com.neusoft.support.sharding.utils.PasswordUtils;
 import com.neusoft.util.StringUtil;
+import com.neusoft.webauth.utils.PasswordUtils;
 import com.xzsd.pc.user.dao.UserDao;
 import com.xzsd.pc.user.entity.UserDO;
 import com.xzsd.pc.user.entity.UserVO;
@@ -41,9 +42,9 @@ public class UserService {
             return AppResponse.bizError("用户账号已存在，请重新输入！");
         }
         //用户密码加密处理
-        //String pwd = PasswordUtils.generatePassword(userDO.getUserPwd());
+        String pwd = PasswordUtils.generatePassword(userDO.getUserPwd());
         userDO.setUserId(StringUtil.getCommonCode(2));
-        //userDO.setUserPwd(pwd);
+        userDO.setUserPwd(pwd);
         userDO.setIsDeleted(0);
         int count = userDao.addUser(userDO);
         if(0 == count) {
@@ -85,8 +86,8 @@ public class UserService {
             return AppResponse.success("用户账号已存在，请重新输入！");
         }
         //用户密码加密处理
-        //String pwd = PasswordUtils.generatePassword(userDO.getUserPwd());
-        //userDO.setUserPwd(pwd);
+        String pwd = PasswordUtils.generatePassword(userDO.getUserPwd());
+        userDO.setUserPwd(pwd);
         //修改用户信息
         int count = userDao.updateUserById(userDO);
         if(0 == count) {

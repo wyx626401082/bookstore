@@ -64,68 +64,35 @@
     </update>
 
     <!-- 查询商品分类列表 -->
-        <resultMap id="classifyResultMap" type="com.xzsd.pc.classify.entity.ClassifyVO">
-            <id column="class_code"/>
-            <result property="className" column="class_name"/>
-            <result property="remark" column="remark"/>
-            <result property="version" column="version"/>
-            <collection property="classTwoList" ofType="com.xzsd.pc.classify.entity.ClassifyVO" select="listClassTwo" column="parent_code">
+    <resultMap id="classifyResultMap" type="com.xzsd.pc.classify.entity.ClassifyVO">
+        <id column="class_code" property="classId"/>
+        <result property="className" column="class_name"/>
+        <result property="remark" column="remark"/>
+        <result property="version" column="version"/>
+        <collection property="classTwoList" ofType="com.xzsd.pc.classify.entity.ClassifyVO" >
+            <id column="class_code" property="classId"/>
+            <result property="className" column="cclassName"/>
+            <result property="remark" column="cremark"/>
+            <result property="version" column="cversion"/>
+        </collection>
+    </resultMap>
 
-                <result property="className" column="cclass_name"/>
-                <result property="remark" column="cremark"/>
-                <result property="version" column="cversion"/>
-            </collection>
-        </resultMap>
-
-        <select id="listClassify" resultMap="classifyResultMap">
-            select
-                *
-            from t_goods_classify
-            where
-                is_deleted = 0
-            and parent_code = 0
-        </select>
-
-        <select id="listClassTwo" resultType="com.xzsd.pc.classify.entity.ClassifyVO">
-            select
-                parent_code,
-                class_name cclass_name,
-                remark cremark,
-                version cversion
-            from t_goods_classify
-            where
-                is_deleted = 0
-        </select>
-
-<!--    <resultMap id="classifyResultMap" type="com.xzsd.pc.classify.entity.ClassifyVO">-->
-<!--        <id column="class_code" property="classId"/>-->
-<!--        <result property="className" column="class_name"/>-->
-<!--        <result property="remark" column="remark"/>-->
-<!--        <result property="version" column="version"/>-->
-<!--        <collection property="classTwoList" ofType="com.xzsd.pc.classify.entity.ClassifyVO" >-->
-<!--            <id column="class_code" property="classId"/>-->
-<!--            <result property="className" column="cclassName"/>-->
-<!--            <result property="remark" column="cremark"/>-->
-<!--            <result property="version" column="cversion"/>-->
-<!--        </collection>-->
-<!--    </resultMap>-->
-
-<!--    <select id="listClassify" resultMap="classifyResultMap">-->
-<!--        select-->
-<!--            cf.class_name,-->
-<!--            cf.remark,-->
-<!--            cf.version,-->
-<!--            cc.class_name cclassName,-->
-<!--            cc.remark cremark,-->
-<!--            cc.version cversion-->
-<!--        from t_goods_classify cf-->
-<!--        left join t_goods_classify cc on cf.class_code = cc.parent_code-->
-<!--        where-->
-<!--            cf.is_deleted = 0-->
-<!--        and cf.parent_code = 0-->
-<!--         or cc.is_deleted = 0-->
-<!--        order by cf.create_time desc-->
-<!--    </select>-->
+    <select id="listClassify" resultMap="classifyResultMap">
+        select
+            cf.class_name,
+            cf.remark,
+            cf.version,
+            cc.class_name cclassName,
+            cc.remark cremark,
+            cc.version cversion
+        from t_goods_classify cf
+        left join t_goods_classify cc on cf.class_code = cc.parent_code
+        where
+            cf.is_deleted = 0
+        and cf.parent_code = 0
+         or cc.is_deleted = 0
+        order by cf.create_time desc
+    </select>
 
     <!-- 查询商品分类详情 -->
     <select id="findClassifyById" parameterType="java.lang.String" resultType="com.xzsd.pc.classify.entity.ClassifyVO">
