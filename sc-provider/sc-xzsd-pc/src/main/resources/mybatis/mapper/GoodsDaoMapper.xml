@@ -163,8 +163,7 @@
             left join t_goods_classify tc2 on tg.class_two_code = tc2.class_code
         where
             is_deleted = 0
-        and
-            tg.goods_code = #{goodsId}
+        and tg.goods_code = #{goodsId}
     </select>
 
     <!-- 查询商品列表 -->
@@ -190,6 +189,7 @@
         LEFT JOIN t_goods_classify tc2 ON tg.class_two_code = tc2.class_code
         WHERE
             is_deleted = 0
+        and tg.state = 1
         <if test="goodsName != null and goodsName != ''">
             and tg.goods_name like concat('%', #{goodsName}, '%')
         </if>
