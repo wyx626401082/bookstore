@@ -27,15 +27,6 @@ public class BannerService {
 
     @Transactional(rollbackFor = Exception.class)
     public AppResponse addBanner(BannerDO bannerDO) {
-        //检测商品id是否存在
-//        int countBannerNO = bannerDao.countBannerNO(bannerDO.getBannerNO());
-//        if(0 != countBannerNO) {
-//            return AppResponse.bizError("轮播图排序已存在，请重新输入！");
-//        }
-//        int countGoodsId = bannerDao.countGoodsId(bannerDO.getGoodsId());
-//        if(0 != countGoodsId) {
-//            return AppResponse.bizError("商品在轮播图中已存在，请重新输入！");
-//        }
         //新增轮播图
         bannerDO.setBannerId(StringUtil.getCommonCode(2));
         int count = bannerDao.addBanner(bannerDO);
@@ -71,7 +62,7 @@ public class BannerService {
      * @return
      */
     @Transactional(rollbackFor = Exception.class)
-    public AppResponse updateBannerById(String bannerId, int bannerState, String userId) {
+    public AppResponse updateBannerById(String bannerId, int bannerState, int version, String userId) {
         List<String> listId = Arrays.asList(bannerId.split(","));
         AppResponse appResponse = AppResponse.success("修改轮播图成功");
         //检验轮播图排序是否存在
@@ -85,7 +76,7 @@ public class BannerService {
             return AppResponse.success("商品在已启用轮播图中存在，请重新选择！");
         }
         //修改轮播图信息
-        int count = bannerDao.updateBannerById(listId,bannerState,userId);
+        int count = bannerDao.updateBannerById(listId,bannerState,version,userId);
         if(0 == count) {
             appResponse = AppResponse.versionError("数据有变化，请刷新！");
             return appResponse;

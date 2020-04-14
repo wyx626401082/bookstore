@@ -76,11 +76,11 @@ public class BannerController {
      * @date 2020-04-14
      */
     @PostMapping("updateBannerById")
-    public AppResponse updateUserById(String bannerId, int bannerState) {
+    public AppResponse updateUserById(String bannerId, int bannerState, int version) {
         try {
             //获取用户id
             String userId = SecurityUtils.getCurrentUserId();
-            return bannerService.updateBannerById(bannerId,bannerState,userId);
+            return bannerService.updateBannerById(bannerId, bannerState, version, userId);
         } catch (Exception e) {
             logger.error("修改轮播图信息错误", e);
             System.out.println(e.toString());

@@ -41,7 +41,7 @@ public interface BannerDao {
      * @param userId 当前用户编号
      * @return
      */
-    int updateBannerById(@Param("listId") List<String> listId, @Param("bannerState")  int bannerState, @Param("userId") String userId);
+    int updateBannerById(@Param("listId") List<String> listId, @Param("bannerState")  int bannerState, @Param("version") int version, @Param("userId") String userId);
 
     /**
      * 删除轮播图

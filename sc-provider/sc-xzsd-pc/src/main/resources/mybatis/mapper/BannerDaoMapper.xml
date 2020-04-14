@@ -100,6 +100,7 @@
             #{item}
         </foreach>
         and is_deleted = 0
+        and vesion = #{version}
     </update>
 
     <!-- 查询轮播图列表 -->
