@@ -60,14 +60,19 @@
 
     <!-- 删除商品 -->
     <update id="deleteGoods" parameterType="com.xzsd.pc.goods.entity.GoodsDO">
-        update t_sys_goods
+        update t_sys_goods sg
+        left join t_goods_host hg on sg.goods_code = hg.goods_code
         set
-            is_deleted = 1,
-            modify_by = #{userId},
-            modify_time = #{modifyTime}
-            version = version+1
+            sg.is_deleted = 1,
+            sg.modify_by = #{userId},
+            sg.modify_time = now(),
+            sg.version = sg.version+1,
+            hg.is_deleted = 1,
+            hg.modify_by = #{userId},
+            hg.modify_time = now(),
+            hg.version = hg.version+1
         where
-            goods_code in
+            sg.goods_code in
         <foreach collection="listGoodsId" item="item" index="item" open="(" separator="," close=")">
             #{item}
         </foreach>
