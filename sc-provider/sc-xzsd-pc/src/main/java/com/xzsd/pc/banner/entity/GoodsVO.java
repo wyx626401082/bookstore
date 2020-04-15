@@ -1,5 +1,10 @@
 package com.xzsd.pc.banner.entity;
 
+/**
+ * 商品选择实体类
+ * @author WangZeBin
+ * @date 2020-04-14
+ */
 public class GoodsVO {
     /**
      * 商品编号

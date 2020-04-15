@@ -1,12 +1,11 @@
 package com.xzsd.pc.user.service;
 
 import com.neusoft.core.restful.AppResponse;
-//import com.neusoft.support.sharding.utils.PasswordUtils;
 import com.neusoft.util.StringUtil;
-import com.neusoft.webauth.utils.PasswordUtils;
 import com.xzsd.pc.user.dao.UserDao;
 import com.xzsd.pc.user.entity.UserDO;
 import com.xzsd.pc.user.entity.UserVO;
+import com.xzsd.pc.utils.PasswordUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
