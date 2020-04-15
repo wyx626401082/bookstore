@@ -85,6 +85,9 @@
         from t_sys_menu
         where
             is_deleted = 0
+        <if test="role = 2">
+            and access_level = 2
+        </if>
         order by create_time desc
     </select>
 
@@ -98,5 +101,8 @@
         where
             menu_code = #{menuId}
         and is_deleted = 0
+        <if test="role = 2">
+            and access_level = 2
+        </if>
     </select>
 </mapper>

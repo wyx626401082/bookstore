@@ -28,6 +28,10 @@ public class MenuDO {
      */
     private int accessLevel;
     /**
+     * 用户角色
+     */
+    private int role;
+    /**
      * 作废标记 0为存在，1为作废
      */
     private int isDeleted;
@@ -98,6 +102,14 @@ public class MenuDO {
 
     public void setAccessLevel(int accessLevel) {
         this.accessLevel = accessLevel;
+    }
+
+    public int getRole() {
+        return role;
+    }
+
+    public void setRole(int role) {
+        this.role = role;
     }
 
     public int getIsDeleted() {
