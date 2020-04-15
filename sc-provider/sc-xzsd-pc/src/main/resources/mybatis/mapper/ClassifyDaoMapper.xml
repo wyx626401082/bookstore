@@ -86,11 +86,11 @@
             cc.remark cremark,
             cc.version cversion
         from t_goods_classify cf
-        left join t_goods_classify cc on cf.class_code = cc.parent_code
+        left join (select * from t_goods_classify where is_deleted = 0) cc
+            on cf.class_code = cc.parent_code
         where
             cf.is_deleted = 0
         and cf.parent_code = 0
-         or cc.is_deleted = 0
         order by cf.create_time desc
     </select>
 

@@ -87,7 +87,6 @@ public class ClassifyService {
         return AppResponse.success("查询商品分类列表成功！", classifyList);
     }
 
-
     /**
      * 查询商品分类详情
      * @param classId 商品分类编号
