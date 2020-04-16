@@ -1,6 +1,7 @@
 package com.xzsd.pc.customer.dao;
 
 import com.xzsd.pc.customer.entity.CustomerInfo;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -11,4 +12,11 @@ public interface CustomerDao {
      * @return
      */
     List<CustomerInfo> listCustomerByPage(CustomerInfo customerInfo);
+
+    /**
+     * 查询门店邀请码
+     * @param userId 店长用户编号
+     * @return
+     */
+    String findInviteCode(@Param("userId") String userId);
 }

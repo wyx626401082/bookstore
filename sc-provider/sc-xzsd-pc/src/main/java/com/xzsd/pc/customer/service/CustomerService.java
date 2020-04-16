@@ -28,6 +28,16 @@ public class CustomerService {
      * @date 2020-04-06
      */
     public AppResponse listCustomer(CustomerInfo customerInfo) {
+        //权限验证
+        int role = customerInfo.getRole();
+        if(0 > role | 2 < role) {
+            return AppResponse.bizError("无查询权限！");
+        }
+        if(2 == role) {
+            String inviteCode = customerDao.findInviteCode(customerInfo.getUserId());
+            customerInfo.setInviteCode(inviteCode);
+        }
+        //查询客户列表（分页）
         List<CustomerInfo> customerInfoList = customerDao.listCustomerByPage(customerInfo);
         return AppResponse.success("查询成功！", getPageInfo(customerInfoList));
     }

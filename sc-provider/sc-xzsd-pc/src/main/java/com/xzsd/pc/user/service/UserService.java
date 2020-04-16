@@ -38,7 +38,7 @@ public class UserService {
         //检测账号是否存在
         int countUserAcct = userDao.countUserAcct(userDO);
         if(0 != countUserAcct) {
-            return AppResponse.bizError("用户账号已存在，请重新输入！");
+            return AppResponse.paramError("用户账号已存在，请重新输入！");
         }
         //用户密码加密处理
         String pwd = PasswordUtils.generatePassword(userDO.getUserPwd());

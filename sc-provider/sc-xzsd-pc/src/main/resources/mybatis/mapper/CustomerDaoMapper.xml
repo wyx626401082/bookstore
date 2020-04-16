@@ -20,6 +20,19 @@
         <if test="customerName != null and customerName != ''">
             and user_name like concat('%', #{customerName}, '%')
         </if>
+        <if test="role == 2">
+            and invite_code = #{inviteCode}
+        </if>
         order by create_time desc
     </select>
+
+    <!-- 通过店长用户编号查询门店邀请码 -->
+    <select id="findInviteCode" parameterType="java.lang.String" resultType="java.lang.String">
+        select
+            invite_code
+        from t_sys_store
+        where is_deleted = 0
+        user_code = #{userId}
+    </select>
+
 </mapper>

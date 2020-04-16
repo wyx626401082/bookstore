@@ -13,6 +13,18 @@ spring:
       name: sc-xzsd-pc
   zipkin:
     base-url: http://127.0.0.1:9411/
+  http:
+    multipart:
+      max-request-size: 10MB
+      max-file-size: 10MB
+  qcloud:
+    secretId: AKIDZxatvg4YdR0JTMruHNBizZsunTyCrK4W
+    secretKey: JK5anRebMqJZZHirkMhqkQZS8ZlhRZRM
+    bucketName: bookstore-1301648544
+    url: https://bookstore-1301648544.cos.ap-guangzhou.myqcloud.com
+    prefix: bookstore
+    region: ap-guangzhou
+
 management:
   security:
     enabled: false

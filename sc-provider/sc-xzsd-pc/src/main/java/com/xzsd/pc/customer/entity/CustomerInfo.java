@@ -17,15 +17,23 @@ public class CustomerInfo {
      */
     private int pageNum;
     /**
-     *用户编码
+     * 门店邀请码
+     */
+    private String inviteCode;
+    /**
+     * 用户编号
+     */
+    private String userId;
+    /**
+     *客户编码
      */
     private String customerId;
     /**
-     * 用户名称
+     * 客户名称
      */
     private String customerName;
     /**
-     * 用户登录账号
+     * 客户登录账号
      */
     private String customerAcct;
     /**
@@ -44,6 +52,26 @@ public class CustomerInfo {
      * 电子邮件
      */
     private String email;
+    /**
+     * 角色编号
+     */
+    private int role;
+
+    public int getRole() {
+        return role;
+    }
+
+    public void setRole(int role) {
+        this.role = role;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
 
     public int getPageSize() {
         return pageSize;
@@ -59,6 +87,14 @@ public class CustomerInfo {
 
     public void setPageNum(int pageNum) {
         this.pageNum = pageNum;
+    }
+
+    public String getInviteCode() {
+        return inviteCode;
+    }
+
+    public void setInviteCode(String inviteCode) {
+        this.inviteCode = inviteCode;
     }
 
     public String getCustomerId() {
