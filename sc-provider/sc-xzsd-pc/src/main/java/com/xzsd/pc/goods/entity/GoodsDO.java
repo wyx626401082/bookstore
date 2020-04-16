@@ -66,10 +66,6 @@ public class GoodsDO {
      */
     private String press;
     /**
-     * 商家名称
-     */
-    private String buyerName;
-    /**
      * 广告词
      */
     private String advertise;
@@ -180,14 +176,6 @@ public class GoodsDO {
 
     public void setSalesNum(int salesNum) {
         this.salesNum = salesNum;
-    }
-
-    public String getBuyerName() {
-        return buyerName;
-    }
-
-    public void setBuyerName(String buyerName) {
-        this.buyerName = buyerName;
     }
 
     public String getInventory() {

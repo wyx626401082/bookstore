@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xzsd.pc.order.dao.OrderDao">
+    <!-- 修改订单信息 -->
+    <update id="updateOrderById" parameterType="com.xzsd.pc.order.entity.OrderDO">
+        update t_sys_order
+        set order_state = #{orderState},
+            modify_time = now(),
+            modify_by = #{managerId},
+            version = version+1
+        where order_code = #{orderId}
+        and version = #{version}
+    </update>
+
+    <!-- 查询订单列表 -->
+    <select id="listOrderByPage" parameterType="com.xzsd.pc.order.entity.OrderDO" resultType="com.xzsd.pc.order.entity.OrderVO">
+        select
+            so.order_code orderId,
+            so.order_money orderMoney,
+            so.order_state orderState,
+            so.store_code storeId,
+            so.buyer_code userId,
+            so.buyer_name userName,
+            so.buyer_phone userPhone,
+            DATE_FORMAT(so.pay_time,'%Y-%m-%d %H:%i:%s') payTime
+        from t_sys_order so
+        <if test="role == 2">
+            left join t_sys_store ss on so.store_code = ss.store_code
+        </if>
+        where so.is_deleted = 0
+        <if test="role == 2">
+            and ss.user_code = #{managerId}
+        </if>
+        <if test="userName != null and userName != ''">
+            and so.buyer_name = #{userName}
+        </if>
+        <if test="userPhone != null and userPhone != ''">
+            and so.buyer_phone = #{userPhone}
+        </if>
+        <if test="orderState != null and orderState != ''">
+            and so.order_state = #{orderState}
+        </if>
+        <if test="orderId != null and orderId != ''">
+            and so.order_code = #{orderId}
+        </if>
+        <if test="payTimeStart != null and payTimeStart != '' and payTimeEnd == null and payTimeEnd == ''">
+            and DATE_FORMAT(so.pay_time,'%Y-%m-%d') = #{payTimeStart}
+        </if>
+        <if test="payTimeEnd != null and payTimeEnd != '' and payTimeStart == null and payTimeStart == ''">
+            and DATE_FORMAT(so.pay_time,'%Y-%m-%d') = #{payTimeEnd}
+        </if>
+        <if test="payTimeStart != null and payTimeStart != '' and payTimeEnd != null and payTimeEnd != ''">
+            and DATE_FORMAT(so.pay_time,'%Y-%m-%d') &gt;= #{payTimeStart}
+            and DATE_FORMAT(so.pay_time,'%Y-%m-%d') &lt;= #{payTimeEnd}
+        </if>
+    </select>
+
+    <!-- 查询订单详情 -->
+    <select id="findOrderById" resultType="com.xzsd.pc.order.entity.OrderVO">
+        select
+            so.buyer_code userId,
+            so.order_code orderId,
+            tg.goods_name goodsName,
+            od.goods_code goodsId,
+            od.goods_num goodsNumber,
+            od.goods_price goodsPrice
+        from t_sys_order so
+        left join t_order_detail od on so.order_code = od.order_code
+        left join t_sys_goods tg on od.goods_code = tg.goods_code
+        where so.is_deleted = 0
+        and od.is_deleted = 0
+        and so.order_code = #{orderId}
+    </select>
+</mapper>

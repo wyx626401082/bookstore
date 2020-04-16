@@ -2,6 +2,10 @@ package com.xzsd.pc.goods.entity;
 
 import java.util.Date;
 
+/**
+ * 商品实体类
+ * @author WangZeBin
+ */
 public class GoodsVO {
     /**
      * 商品编号
@@ -59,10 +63,6 @@ public class GoodsVO {
      * 出版社
      */
     private String press;
-    /**
-     * 商家名称
-     */
-    private String buyerName;
     /**
      * 广告词
      */
@@ -210,14 +210,6 @@ public class GoodsVO {
 
     public void setPress(String press) {
         this.press = press;
-    }
-
-    public String getBuyerName() {
-        return buyerName;
-    }
-
-    public void setBuyerName(String buyerName) {
-        this.buyerName = buyerName;
     }
 
     public String getAdvertise() {

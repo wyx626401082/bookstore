@@ -1,5 +1,9 @@
 package com.xzsd.pc.goods.entity;
 
+/**
+ * 商品分类实体类
+ * @author PC123
+ */
 public class ClassifyVO {
     /**
      * 分类编号
