@@ -98,9 +98,9 @@ public class MenuController {
      * @date 2020-04-02
      */
     @RequestMapping(value="listMenu")
-    public AppResponse listMenu() {
+    public AppResponse listMenu(int role) {
         try {
-            return menuService.listMenu();
+            return menuService.listMenu(role);
         } catch(Exception e) {
             logger.error("查询菜单列表异常", e);
             System.out.println(e.toString());

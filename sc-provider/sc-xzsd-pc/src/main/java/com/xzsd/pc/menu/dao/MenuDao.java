@@ -44,9 +44,10 @@ public interface MenuDao {
 
     /**
      * 查询菜单信息列表
+     * @param role 角色编码
      * @return
      */
-    List<MenuVO> listMenu();
+    List<MenuVO> listMenu(@Param("role") int role);
 
     /**
      * 查询菜单详情

@@ -24,7 +24,7 @@ public class MenuDO {
      */
     private int menuLevel;
     /**
-     * 菜单使用权限等级
+     * 菜单使用权限等级:0超级管理员可见；1超级管理员、普通管理员可见；2超级管理员、普通管理员、店长可见
      */
     private int accessLevel;
     /**

@@ -75,20 +75,20 @@
     </update>
 
     <!-- 查询菜单集合 -->
-    <select id="listMenu" resultType="com.xzsd.pc.menu.entity.MenuVO">
-        select
+    <select id="listMenu" parameterType="int" resultType="com.xzsd.pc.menu.entity.MenuVO">
+            select
             menu_code menuId,
             menu_name menuName,
             menu_url menuUrl,
             remark,
             version
-        from t_sys_menu
-        where
+            from t_sys_menu
+            where
             is_deleted = 0
-        <if test="role = 2">
-            and access_level = 2
-        </if>
-        order by create_time desc
+            <if test="role == 2">
+                and access_level = 2
+            </if>
+            order by create_time desc
     </select>
 
     <!-- 查询菜单详情 -->
@@ -101,7 +101,7 @@
         where
             menu_code = #{menuId}
         and is_deleted = 0
-        <if test="role = 2">
+        <if test="role == 2">
             and access_level = 2
         </if>
     </select>

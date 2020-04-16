@@ -94,8 +94,11 @@ public class MenuService {
      * @author WangZeBin
      * @date 2020-04-02
      */
-    public AppResponse listMenu() {
-        List<MenuVO> menuVOList = menuDao.listMenu();
+    public AppResponse listMenu(int role) {
+        if(0 > role | 2 < role) {
+            return AppResponse.bizError("无查询菜单列表权限");
+        }
+        List<MenuVO> menuVOList = menuDao.listMenu(role);
         return AppResponse.success("查询菜单列表成功！", menuVOList);
     }
 
