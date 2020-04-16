@@ -23,7 +23,6 @@
          book_code,
          author,
          press,
-         buyer_name,
          is_deleted,
          create_time,
          create_by,
@@ -49,7 +48,6 @@
             #{bookId},
             #{author},
             #{press},
-            #{buyerName},
             0,
             now(),
             #{createBy},
@@ -110,9 +108,6 @@
         </if>
         <if test="introduce != null and introduce != ''">
             introduce = #{introduce},
-        </if>
-        <if test="buyerName != null and buyerName != ''">
-            buyer_name = #{buyerName},
         </if>
         <if test="inventory != null and inventory != ''">
             inventory = #{inventory},

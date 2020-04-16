@@ -96,7 +96,7 @@
         <if test="userAcct != null and userAcct != ''">
             and user_acct like concat('%', #{userAcct}, '%')
         </if>
-        <if test="userName != null and userAcct != ''">
+        <if test="userName != null and userName != ''">
             and user_name like concat('%', #{userName}, '%')
         </if>
         <if test="role != null and role != ''">
