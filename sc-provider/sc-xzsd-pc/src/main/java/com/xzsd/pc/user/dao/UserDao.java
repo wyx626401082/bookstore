@@ -62,4 +62,11 @@ public interface UserDao {
      * @return 用户详情
      */
     UserVO findUserById(@Param("userId") String userId);
+
+    /**
+     * 顶部栏查询
+     * @param userId 当前登录用户编号
+     * @return
+     */
+    UserVO getTopOfColumn(@Param("userId") String userId);
 }

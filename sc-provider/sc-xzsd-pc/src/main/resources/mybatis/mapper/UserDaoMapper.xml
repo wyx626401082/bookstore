@@ -17,6 +17,7 @@
              user_name,
              user_acct,
              user_pwd,
+             user_image_url,
              id_card,
              sex,
              phone,
@@ -33,6 +34,7 @@
             #{userName},
             #{userAcct},
             #{userPwd},
+            #{userImage},
             #{idCard},
             #{sex},
             #{phone},
@@ -64,12 +66,33 @@
     <update id="updateUserById" parameterType="com.xzsd.pc.user.entity.UserDO">
         update t_sys_user
         set
+        <if test="userName != null and userName != ''">
             user_name = #{userName},
+        </if>
+        <if test="userAcct != null and userAcct != ''">
             user_acct = #{userAcct},
-            id_card = #{idCard},
+        </if>
+        <if test="userPwd != null and userPwd != ''">
+            user_pwd = #{userPwd},
+        </if>
+        <if test="userImage != null and userImage != ''">
+            user_image_url = #{userImage},
+        </if>
+        <if test="sex != null and sex != ''">
             sex = #{sex},
+        </if>
+        <if test="phone != null and phone != ''">
             phone = #{phone},
+        </if>
+        <if test="email != null and email != ''">
             email = #{email},
+        </if>
+        <if test="idCard != null and idCard != ''">
+            id_card = #{idCard},
+        </if>
+        <if test="role != null and role != ''">
+            role = #{role},
+        </if>
             modify_by = #{modifyBy},
             modify_time = now(),
             version = version + 1
@@ -120,4 +143,17 @@
         where user_code = #{userId}
         and is_deleted = 0
     </select>
+
+    <!-- 顶部栏查询 -->
+    <select id="getTopOfColumn" resultType="com.xzsd.pc.user.entity.UserVO">
+        select
+            user_code userId,
+            user_name userName,
+            user_image_url userImage,
+            role
+        from t_sys_user
+        where user_code = #{userId}
+        and is_deleted = 0
+    </select>
+
 </mapper>

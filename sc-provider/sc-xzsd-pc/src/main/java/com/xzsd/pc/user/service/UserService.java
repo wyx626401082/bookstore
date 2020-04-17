@@ -27,6 +27,19 @@ public class UserService {
     private UserDao userDao;
 
     /**
+     * 普通管理员角色编号
+     */
+    public static int systemManager = 1;
+    /**
+     * 店长角色编号
+     */
+    public static int manager = 2;
+    /**
+     * 司机角色编号
+     */
+    public static int driver = 3;
+
+    /**
      * 新增用户
      * @param userDO
      * @return
@@ -39,6 +52,11 @@ public class UserService {
         int countUserAcct = userDao.countUserAcct(userDO);
         if(0 != countUserAcct) {
             return AppResponse.paramError("用户账号已存在，请重新输入！");
+        }
+        //角色验证
+        int role = userDO.getRole();
+        if(role != systemManager | role != manager  | role != driver) {
+            return AppResponse.paramError("用户角色输入错误，请重新输入");
         }
         //用户密码加密处理
         String pwd = PasswordUtils.generatePassword(userDO.getUserPwd());
@@ -80,9 +98,15 @@ public class UserService {
     @Transactional(rollbackFor = Exception.class)
     public AppResponse updateUserById(UserDO userDO) {
         AppResponse appResponse = AppResponse.success("修改成功");
+        //检测账号是否存在
         int countUserAcct = userDao.countUserAcct(userDO);
         if(0 != countUserAcct) {
             return AppResponse.success("用户账号已存在，请重新输入！");
+        }
+        //角色验证
+        int role = userDO.getRole();
+        if(role != systemManager | role != manager  | role != driver) {
+            return AppResponse.paramError("用户角色输入错误，请重新输入");
         }
         //用户密码加密处理
         String pwd = PasswordUtils.generatePassword(userDO.getUserPwd());
@@ -119,8 +143,24 @@ public class UserService {
         UserVO userVO = null;
         userVO = userDao.findUserById(userId);
         if (userVO == null) {
-            return AppResponse.notFound("无查询结果");
+            return AppResponse.success("无用户详情查询结果");
         }
-        return AppResponse.success("查询详情成功", userVO);
+        return AppResponse.success("查询用户详情成功", userVO);
+    }
+
+    /**
+     * 顶部栏查询
+     * @param userId 当前登录用户编号
+     * @return
+     * @author WangZeBin
+     * @date 2020-04-17
+     */
+    public AppResponse getTopOfColumn(String userId) {
+        UserVO userVO = null;
+        userVO = userDao.getTopOfColumn(userId);
+        if (userVO == null) {
+            return AppResponse.success("无顶部栏查询结果");
+        }
+        return AppResponse.success("顶部栏查询成功", userVO);
     }
 }

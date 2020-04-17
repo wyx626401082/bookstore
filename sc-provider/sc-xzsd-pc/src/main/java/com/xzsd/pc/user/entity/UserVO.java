@@ -26,6 +26,10 @@ public class UserVO {
      */
     private String userPwd;
     /**
+     * 用户头像图片路径
+     */
+    private String userImage;
+    /**
      * 身份证号码
      */
     private String idCard;
@@ -97,6 +101,14 @@ public class UserVO {
 
     public void setUserPwd(String userPwd) {
         this.userPwd = userPwd;
+    }
+
+    public String getUserImage() {
+        return userImage;
+    }
+
+    public void setUserImage(String userImage) {
+        this.userImage = userImage;
     }
 
     public String getIdCard() {

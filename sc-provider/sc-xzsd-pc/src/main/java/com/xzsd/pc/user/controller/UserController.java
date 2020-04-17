@@ -126,4 +126,23 @@ public class UserController {
             throw e;
         }
     }
+
+    /**
+     * 顶部栏查询
+     * @return
+     * @author WangZeBin
+     * @date 2020-04-17
+     */
+    @RequestMapping(value="getTopOfColumn")
+    public AppResponse getTopOfColumn(String userId) {
+        try {
+            //获取当前用户编号
+//            String userId = SecurityUtils.getCurrentUserId();
+            return userService.getTopOfColumn(userId);
+        } catch (Exception e) {
+            logger.error("顶部栏查询异常", e);
+            System.out.println(e.toString());
+            throw e;
+        }
+    }
 }
