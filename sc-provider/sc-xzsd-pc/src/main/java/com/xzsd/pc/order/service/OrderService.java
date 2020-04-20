@@ -9,7 +9,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.neusoft.core.page.PageUtils.getPageInfo;
 
@@ -25,17 +28,30 @@ public class OrderService {
 
     /**
      * 修改订单信息
-     * @param orderDO
+     * @param orderId 订单编号，多个用“，”隔开
+     * @param orderState 订单状态
+     * @param version 版本号，多个用“，”隔开
+     * @param userId 当前登录用户编号
      * @return
      * @author WangZebin
      * @date 2020-04-15
      */
     @Transactional(rollbackFor = Exception.class)
-    public AppResponse updateOrderById(OrderDO orderDO) {
+    public AppResponse updateOrderById(String orderId, int orderState, String version, String userId) {
         AppResponse appResponse = AppResponse.success("修改订单状态成功");
+        //将订单id，以及与其对应版本号转化为List
+        List<String> listId = Arrays.asList(orderId.split(","));
+        List<String> listVersion = Arrays.asList(version.split(","));
+        int num = listId.size();
+        //以订单id为key，版本号为value存入Map
+        Map versionMap = new HashMap<String,Integer>(num);
+        for(int i = 0; i < num; i++) {
+            int intVersion = Integer.valueOf(listVersion.get(i));
+            versionMap.put(listId.get(i),intVersion);
+        }
         //修改订单信息
-        int count = orderDao.updateOrderById(orderDO);
-        if(0 == count) {
+        int count = orderDao.updateOrderById(orderState,versionMap,userId);
+        if(num > count) {
             appResponse = AppResponse.versionError("数据有变化，请刷新！");
             return appResponse;
         }

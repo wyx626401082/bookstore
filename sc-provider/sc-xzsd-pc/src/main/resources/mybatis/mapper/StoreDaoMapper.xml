@@ -1,6 +1,25 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.xzsd.pc.store.dao.StoreDao">
+    <!-- 查找店长编号是否存在 -->
+    <select id="countManagerId" resultType="int">
+        select count(user_code)
+        from t_sys_user
+        where user_code = #{userId}
+        and role = 2
+        and is_deleted = 0
+    </select>
+
+    <!-- 查询店长是否绑定门店 -->
+    <select id="countIsStoreManager" resultType="int">
+        select count(tu.user_code)
+        from t_sys_user tu
+        left join t_sys_store ts on tu.user_code = ts.user_code
+        where tu.user_code = #{userId}
+        and role = 2
+        and tu.is_deleted = 0
+        and ts.is_deleted = 0
+    </select>
 
     <!-- 新增门店 -->
     <insert id="addStore" parameterType="com.xzsd.pc.store.entity.StoreDO">
@@ -141,8 +160,11 @@
             ts.user_code userId,
             ts.license_code licenseId,
             ts.invite_code inviteCode,
+            tp.dic_code provinceId,
             tp.dic_name provinceName,
+            tc.dic_code cityId,
             tc.dic_name cityName,
+            ty.dic_code countyId,
             ty.dic_name countyName,
             ts.store_address detailAddress
         from t_sys_store ts

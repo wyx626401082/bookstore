@@ -34,6 +34,18 @@ public class StoreVO {
      */
     private String licenseId;
     /**
+     * 省编号
+     */
+    private String provinceId;
+    /**
+     * 市编号
+     */
+    private String cityId;
+    /**
+     * 区编号
+     */
+    private String countyId;
+    /**
      * 省名称
      */
     private String provinceName;
@@ -116,6 +128,30 @@ public class StoreVO {
 
     public void setLicenseId(String licenseId) {
         this.licenseId = licenseId;
+    }
+
+    public String getProvinceId() {
+        return provinceId;
+    }
+
+    public void setProvinceId(String provinceId) {
+        this.provinceId = provinceId;
+    }
+
+    public String getCityId() {
+        return cityId;
+    }
+
+    public void setCityId(String cityId) {
+        this.cityId = cityId;
+    }
+
+    public String getCountyId() {
+        return countyId;
+    }
+
+    public void setCountyId(String countyId) {
+        this.countyId = countyId;
     }
 
     public String getProvinceName() {

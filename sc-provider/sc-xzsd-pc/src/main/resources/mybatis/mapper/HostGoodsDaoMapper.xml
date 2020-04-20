@@ -50,17 +50,22 @@
     <update id="deleteHostGoods">
         update t_goods_host
         set is_deleted = 1
+            modify_time = now(),
+            modify_by = #{userId},
+            version = version+1
         where host_code in
         <foreach item="item" index="index" collection="listId" open="(" separator="," close=")">
             #{item}
         </foreach>
     </update>
 
-    <!-- 修改热门商品信息 -->
+    <!-- 修改热门商品排序 -->
     <update id="updateHostGoodsById" parameterType="com.xzsd.pc.hostgoods.entity.HostGoodsDO">
         update t_goods_host
         set goods_code = #{goodsId},
             host_no = #{hostGoodsNO},
+            modify_time = now(),
+            modify_by = #{modifyBy},
             version = version+1
         where host_code = #{hostGoodsId}
         and version = #{version}
@@ -87,7 +92,7 @@
         <if test="goodsName != null and goodsName != ''">
             and goods_name like concat('%', #{goodsName}, '%')
         </if>
-        order by host_no desc
+        order by host_no asc
     </select>
 
     <!-- 查询热门商品展示数量 -->
@@ -101,7 +106,7 @@
         and is_deleted = 0
     </select>
 
-    <!-- 修改热门商品 -->
+    <!-- 修改热门商品展示数量 -->
     <update id="updateShowNumber">
         update t_sys_dictionary
         set dic_value = #{showNumber},

@@ -6,10 +6,16 @@
         update t_sys_order
         set order_state = #{orderState},
             modify_time = now(),
-            modify_by = #{managerId},
+            modify_by = #{userId},
             version = version+1
-        where order_code = #{orderId}
-        and version = #{version}
+        where order_code in
+        <foreach collection="versionMap" item="item" index="key" open="(" separator="," close=")">
+            #{key}
+        </foreach>
+        and version =
+        <foreach collection="versionMap" item="item" index="key" open="case goods_code" separator=" " close="end">
+            when #{key} then #{item}
+        </foreach>
     </update>
 
     <!-- 查询订单列表 -->
@@ -44,15 +50,16 @@
             and so.order_code = #{orderId}
         </if>
         <if test="payTimeStart != null and payTimeStart != '' and payTimeEnd == null and payTimeEnd == ''">
-            and DATE_FORMAT(so.pay_time,'%Y-%m-%d') = #{payTimeStart}
+            and so.pay_time = #{payTimeStart}
         </if>
         <if test="payTimeEnd != null and payTimeEnd != '' and payTimeStart == null and payTimeStart == ''">
-            and DATE_FORMAT(so.pay_time,'%Y-%m-%d') = #{payTimeEnd}
+            and so.pay_time = #{payTimeEnd}
         </if>
         <if test="payTimeStart != null and payTimeStart != '' and payTimeEnd != null and payTimeEnd != ''">
             and DATE_FORMAT(so.pay_time,'%Y-%m-%d') &gt;= #{payTimeStart}
             and DATE_FORMAT(so.pay_time,'%Y-%m-%d') &lt;= #{payTimeEnd}
         </if>
+        order by so.create_time desc
     </select>
 
     <!-- 查询订单详情 -->

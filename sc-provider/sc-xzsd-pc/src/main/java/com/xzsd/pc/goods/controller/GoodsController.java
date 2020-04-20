@@ -92,18 +92,19 @@ public class GoodsController {
 
     /**
      * 修改商品状态（上架、下架）
-     * @param goodsDO
+     * @param goodsId 商品编号，多个用“，”隔开
+     * @param goodsState 商品状态
+     * @param version 版本号，多个用“，”隔开
      * @return
      * @author WangZebin
      * @date 2020-03-30
      */
     @PostMapping("/updateStateById")
-    public AppResponse updateStateById(GoodsDO goodsDO) {
+    public AppResponse updateStateById(String goodsId, int goodsState, String version) {
         try {
             //获取用户id
             String userId = SecurityUtils.getCurrentUserId();
-            goodsDO.setModifyBy(userId);
-            AppResponse appResponse = goodsService.updateStateById(goodsDO);
+            AppResponse appResponse = goodsService.updateStateById(goodsId, goodsState, version, userId);
             return appResponse;
         }catch(Exception e) {
             logger.error("商品状态修改失败", e);

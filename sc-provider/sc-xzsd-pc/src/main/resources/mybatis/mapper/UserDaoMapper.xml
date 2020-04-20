@@ -8,6 +8,7 @@
         from t_sys_user
         where is_deleted = 0
         and user_acct = #{userAcct}
+        and user_code &lt;&gt; #{userId}
     </select>
 
     <!--新增用户-->
@@ -60,6 +61,7 @@
         <foreach item="item" index="index" collection="listId" open="(" separator="," close=")">
             #{item}
         </foreach>
+        and role &lt;&gt; 0
     </update>
 
     <!-- 修改用户-->
@@ -113,9 +115,11 @@
             phone,
             email,
             id_card idCard,
+            role,
             version
         from t_sys_user
         where is_deleted = 0
+        and (role = 1 or role = 2)
         <if test="userAcct != null and userAcct != ''">
             and user_acct like concat('%', #{userAcct}, '%')
         </if>

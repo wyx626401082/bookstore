@@ -35,10 +35,20 @@ public class StoreService {
      */
     @Transactional(rollbackFor = Exception.class)
     public AppResponse addStore(StoreDO storeDO) {
-        //新建门店编号
+        //检验店长编号是否存在
+        int countId = storeDao.countManagerId(storeDO.getUserId());
+        if(0 == countId) {
+            return AppResponse.paramError("店长编号不存在");
+        }
+        //检验店长是否绑定门店
+        int countIs = storeDao.countIsStoreManager(storeDO.getUserId());
+        if(0 != countIs) {
+            return AppResponse.paramError("店长已绑定门店，请重新选择");
+        }
+        //生成门店编号
         storeDO.setStoreId(StringUtil.getCommonCode(2));
         storeDO.setIsDeleted(0);
-        //新建邀请码，根据门店编号生成YQM+随机六位字符
+        //生成邀请码，根据门店编号生成“YQM+随机六位字符”
         String inviteCode = "YQM".concat(RandomUtils.toRandomCode(Long.valueOf(storeDO.getStoreId())));
         storeDO.setInviteCode(inviteCode);
         //新增门店

@@ -69,14 +69,15 @@ public class BannerController {
 
     /**
      * 修改轮播图信息
-     * @param bannerId 轮播图编号
+     * @param bannerId 轮播图编号，多个用“，”隔开
      * @param bannerState 轮播图状态 0禁用，1启用
+     * @param version 版本号，多个用“，”隔开
      * @return
      * @author WangZebin
      * @date 2020-04-14
      */
     @PostMapping("updateBannerById")
-    public AppResponse updateUserById(String bannerId, int bannerState, int version) {
+    public AppResponse updateUserById(String bannerId, int bannerState, String version) {
         try {
             //获取用户id
             String userId = SecurityUtils.getCurrentUserId();

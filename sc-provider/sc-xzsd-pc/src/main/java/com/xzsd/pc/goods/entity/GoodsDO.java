@@ -44,7 +44,10 @@ public class GoodsDO {
      * 商品库存
      */
     private String inventory;
-
+    /**
+     * 商家名称
+     */
+    private String sellerName;
     /**
      * 一级分类编码
      */
@@ -186,6 +189,22 @@ public class GoodsDO {
         this.inventory = inventory;
     }
 
+    public String getSellerName() {
+        return sellerName;
+    }
+
+    public void setSellerName(String sellerName) {
+        this.sellerName = sellerName;
+    }
+
+    public int getGoodsState() {
+        return goodsState;
+    }
+
+    public void setGoodsState(int goodsState) {
+        this.goodsState = goodsState;
+    }
+
     public String getBookId() {
         return bookId;
     }
@@ -240,14 +259,6 @@ public class GoodsDO {
 
     public void setIntroduce(String introduce) {
         this.introduce = introduce;
-    }
-
-    public int getgoodsState() {
-        return goodsState;
-    }
-
-    public void setgoodsState(int goodsState) {
-        this.goodsState = goodsState;
     }
 
     public Date getPutawayTime() {

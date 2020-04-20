@@ -20,7 +20,7 @@ public class GoodsVO {
      */
     private String goodsPrice;
     /**
-     * 商品成本
+     * 商品成本价（定价）
      */
     private String goodsCost;
     /**
@@ -35,6 +35,10 @@ public class GoodsVO {
      * 商品销售量
      */
     private int salesNum;
+    /**
+     * 商家名称
+     */
+    private String sellerName;
     /**
      * 一级分类编码
      */
@@ -170,6 +174,14 @@ public class GoodsVO {
 
     public void setSalesNum(int salesNum) {
         this.salesNum = salesNum;
+    }
+
+    public String getSellerName() {
+        return sellerName;
+    }
+
+    public void setSellerName(String sellerName) {
+        this.sellerName = sellerName;
     }
 
     public String getClassOneName() {

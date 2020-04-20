@@ -10,8 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 import static com.neusoft.core.page.PageUtils.getPageInfo;
 
@@ -58,26 +57,37 @@ public class BannerService {
      * 修改轮播图信息
      * @param bannerId 轮播图编号 多个用“，”隔开
      * @param bannerState 轮播图状态
+     * @param version 版本号 多个用“，”隔开
      * @param userId 当前用户编号
      * @return
      */
     @Transactional(rollbackFor = Exception.class)
-    public AppResponse updateBannerById(String bannerId, int bannerState, int version, String userId) {
-        List<String> listId = Arrays.asList(bannerId.split(","));
+    public AppResponse updateBannerById(String bannerId, int bannerState, String version, String userId) {
         AppResponse appResponse = AppResponse.success("修改轮播图成功");
+        //将一个或多个轮播图id保存到list
+        List<String> listId = Arrays.asList(bannerId.split(","));
+        //将一个或多个版本号保存到list
+        List<String> listVersion = Arrays.asList(version.split(","));
+        int num = listId.size();
+        //以轮播图编号为key，版本号为value，放到map中
+        Map versionMap = new HashMap<String,Integer>(num);
+        for(int i = 0; i < num; i++){
+            int intVersion = Integer.valueOf(listVersion.get(i));
+            versionMap.put(listId.get(i),intVersion);
+        }
         //检验轮播图排序是否存在
         int countBannerNO = bannerDao.countBannerNO(listId);
         if(0 != countBannerNO) {
-            return AppResponse.success("轮播图排序重复，请重新选择！");
+            return AppResponse.paramError("存在轮播图排序重复，请重新选择！");
         }
         //检验商品是否在启用轮播图中存在
         int countGoodsId = bannerDao.countGoodsId(listId);
         if(0 != countGoodsId) {
-            return AppResponse.success("商品在已启用轮播图中存在，请重新选择！");
+            return AppResponse.paramError("商品在已启用轮播图中存在，请重新选择！");
         }
         //修改轮播图信息
-        int count = bannerDao.updateBannerById(listId,bannerState,version,userId);
-        if(0 == count) {
+        int count = bannerDao.updateBannerById(bannerState,versionMap,userId);
+        if(num > count) {
             appResponse = AppResponse.versionError("数据有变化，请刷新！");
             return appResponse;
         }

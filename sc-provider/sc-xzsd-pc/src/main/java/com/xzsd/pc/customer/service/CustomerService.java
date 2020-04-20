@@ -3,6 +3,8 @@ package com.xzsd.pc.customer.service;
 import com.neusoft.core.restful.AppResponse;
 import com.xzsd.pc.customer.dao.CustomerDao;
 import com.xzsd.pc.customer.entity.CustomerInfo;
+import com.xzsd.pc.customer.entity.CustomerVO;
+import com.xzsd.pc.utils.GlobalClass;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -30,15 +32,13 @@ public class CustomerService {
     public AppResponse listCustomer(CustomerInfo customerInfo) {
         //权限验证
         int role = customerInfo.getRole();
-        if(0 > role | 2 < role) {
-            return AppResponse.bizError("无查询权限！");
-        }
-        if(2 == role) {
+        if(GlobalClass.storeManager == role) {
+            //通过店长编号获取门店邀请码
             String inviteCode = customerDao.findInviteCode(customerInfo.getUserId());
             customerInfo.setInviteCode(inviteCode);
         }
         //查询客户列表（分页）
-        List<CustomerInfo> customerInfoList = customerDao.listCustomerByPage(customerInfo);
-        return AppResponse.success("查询成功！", getPageInfo(customerInfoList));
+        List<CustomerVO> customerVOList = customerDao.listCustomerByPage(customerInfo);
+        return AppResponse.success("查询成功！", getPageInfo(customerVOList));
     }
 }

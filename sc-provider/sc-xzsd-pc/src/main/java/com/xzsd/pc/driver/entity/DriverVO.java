@@ -31,6 +31,18 @@ public class DriverVO {
      */
     private String idCard;
     /**
+     * 省编号
+     */
+    private String provinceId;
+    /**
+     * 市编号
+     */
+    private String cityId;
+    /**
+     * 区编号
+     */
+    private String countyId;
+    /**
      *所在省份名称
      */
     private String provinceName;
@@ -93,6 +105,30 @@ public class DriverVO {
 
     public void setIdCard(String idCard) {
         this.idCard = idCard;
+    }
+
+    public String getProvinceId() {
+        return provinceId;
+    }
+
+    public void setProvinceId(String provinceId) {
+        this.provinceId = provinceId;
+    }
+
+    public String getCityId() {
+        return cityId;
+    }
+
+    public void setCityId(String cityId) {
+        this.cityId = cityId;
+    }
+
+    public String getCountyId() {
+        return countyId;
+    }
+
+    public void setCountyId(String countyId) {
+        this.countyId = countyId;
     }
 
     public String getProvinceName() {

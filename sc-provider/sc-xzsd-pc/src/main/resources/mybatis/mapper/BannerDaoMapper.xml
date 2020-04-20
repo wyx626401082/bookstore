@@ -91,16 +91,19 @@
     <update id="updateBannerById" >
         update t_sys_banner
         set
-            state = #{bannerState},
-            modify_time = now(),
-            modify_by = #{userId},
-            version = version+1
+        state = #{bannerState},
+        modify_time = now(),
+        modify_by = #{userId},
+        version = version+1
         where banner_code in
-        <foreach collection="listId" item="item" index="index" open="(" separator="," close=")">
-            #{item}
+        <foreach collection="versionMap" item="item" index="key" open="(" separator="," close=")">
+            #{key}
+        </foreach>
+        and version =
+        <foreach collection="versionMap" item="item" index="key" open="case banner_code" separator=" " close="end">
+            when #{key} then #{item}
         </foreach>
         and is_deleted = 0
-        and vesion = #{version}
     </update>
 
     <!-- 查询轮播图列表 -->
@@ -117,7 +120,7 @@
         <if test="bannerState != null and bannerState != ''">
             and state = #{bannerState}
         </if>
-        order by create_time desc
+        order by banner_no asc
     </select>
 
     <!-- 查询商品选择列表 -->

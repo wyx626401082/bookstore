@@ -1,9 +1,7 @@
 package com.xzsd.pc.user.controller;
 
-
 import com.neusoft.core.restful.AppResponse;
 import com.neusoft.security.client.utils.SecurityUtils;
-import com.xzsd.pc.user.dao.UserDao;
 import com.xzsd.pc.user.entity.UserDO;
 import com.xzsd.pc.user.service.UserService;
 import org.slf4j.Logger;
@@ -13,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-
 
 /**
  * 用户管理增删改查
@@ -134,10 +131,10 @@ public class UserController {
      * @date 2020-04-17
      */
     @RequestMapping(value="getTopOfColumn")
-    public AppResponse getTopOfColumn(String userId) {
+    public AppResponse getTopOfColumn() {
         try {
             //获取当前用户编号
-//            String userId = SecurityUtils.getCurrentUserId();
+            String userId = SecurityUtils.getCurrentUserId();
             return userService.getTopOfColumn(userId);
         } catch (Exception e) {
             logger.error("顶部栏查询异常", e);

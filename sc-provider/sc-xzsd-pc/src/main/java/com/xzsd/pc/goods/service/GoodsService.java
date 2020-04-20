@@ -10,7 +10,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import static com.neusoft.core.page.PageUtils.getPageInfo;
 
 
@@ -80,15 +83,29 @@ public class GoodsService {
 
     /**
      * 修改商品状态
-     * @param goodsDO
+     * @param goodsId 商品编号，多个用“，”隔开
+     * @param goodsState 商品状态
+     * @param version 版本号，多个用“，”隔开
+     * @param userId 用户编号
      * @return
      * @author WangZeBine
      * @date 2020-03-30
      */
     @Transactional(rollbackFor =  Exception.class)
-    public AppResponse updateStateById(GoodsDO goodsDO) {
-        int count = goodsDao.updateStateById(goodsDO);
-        if(0 == count) {
+    public AppResponse updateStateById(String goodsId, int goodsState, String version, String userId) {
+        //将商品id，以及与其对应版本号转化为List
+        List<String> listId = Arrays.asList(goodsId.split(","));
+        List<String> listVersion = Arrays.asList(version.split(","));
+        int num = listId.size();
+        //以商品id为key，版本号为value存入Map
+        Map versionMap = new HashMap<String,Integer>(num);
+        for(int i = 0; i < num; i++) {
+            int intVersion = Integer.valueOf(listVersion.get(i));
+            versionMap.put(listId.get(i),intVersion);
+        }
+        //修改商品状态
+        int count = goodsDao.updateStateById(goodsState,versionMap,userId);
+        if(num > count) {
             return AppResponse.versionError("数据有变化，请刷新！");
         }
         return AppResponse.success("修改商品状态成功");

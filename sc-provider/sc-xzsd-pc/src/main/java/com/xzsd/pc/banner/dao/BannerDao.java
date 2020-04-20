@@ -5,7 +5,9 @@ import com.xzsd.pc.banner.entity.BannerVO;
 import com.xzsd.pc.banner.entity.GoodsVO;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 轮播图管理接口
@@ -35,13 +37,13 @@ public interface BannerDao {
     int addBanner(BannerDO bannerDO);
 
     /**
-     * 修改轮播图信息
-     * @param listId 轮播图编号集合
+     * 修改轮播图状态
      * @param bannerState 轮播图状态 0禁用，1启用
+     * @param versionMap 轮播图编号->版本号map
      * @param userId 当前用户编号
      * @return
      */
-    int updateBannerById(@Param("listId") List<String> listId, @Param("bannerState")  int bannerState, @Param("version") int version, @Param("userId") String userId);
+    int updateBannerById(@Param("bannerState")  int bannerState, @Param("versionMap") Map<String,Integer> versionMap, @Param("userId") String userId);
 
     /**
      * 删除轮播图

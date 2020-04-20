@@ -42,7 +42,7 @@ public interface HostGoodsDao {
     int deleteHostGoods(@Param("listId") List<String> listId, @Param("userId") String userId);
 
     /**
-     * 修改热门商品
+     * 修改热门商品排序
      * @param hostGoodsDO 热门商品信息
      * @return
      */

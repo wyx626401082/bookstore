@@ -1,6 +1,7 @@
 package com.xzsd.pc.customer.dao;
 
 import com.xzsd.pc.customer.entity.CustomerInfo;
+import com.xzsd.pc.customer.entity.CustomerVO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -11,7 +12,7 @@ public interface CustomerDao {
      * @param customerInfo 客户信息集合
      * @return
      */
-    List<CustomerInfo> listCustomerByPage(CustomerInfo customerInfo);
+    List<CustomerVO> listCustomerByPage(CustomerInfo customerInfo);
 
     /**
      * 查询门店邀请码

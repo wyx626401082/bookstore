@@ -5,6 +5,7 @@ import com.neusoft.util.StringUtil;
 import com.xzsd.pc.user.dao.UserDao;
 import com.xzsd.pc.user.entity.UserDO;
 import com.xzsd.pc.user.entity.UserVO;
+import com.xzsd.pc.utils.GlobalClass;
 import com.xzsd.pc.utils.PasswordUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,19 +28,6 @@ public class UserService {
     private UserDao userDao;
 
     /**
-     * 普通管理员角色编号
-     */
-    public static int systemManager = 1;
-    /**
-     * 店长角色编号
-     */
-    public static int manager = 2;
-    /**
-     * 司机角色编号
-     */
-    public static int driver = 3;
-
-    /**
      * 新增用户
      * @param userDO
      * @return
@@ -48,6 +36,8 @@ public class UserService {
      */
     @Transactional(rollbackFor = Exception.class)
     public AppResponse addUser(UserDO userDO) {
+        //新生成用户编号
+        userDO.setUserId(StringUtil.getCommonCode(2));
         //检测账号是否存在
         int countUserAcct = userDao.countUserAcct(userDO);
         if(0 != countUserAcct) {
@@ -55,12 +45,11 @@ public class UserService {
         }
         //角色验证
         int role = userDO.getRole();
-        if(role != systemManager | role != manager  | role != driver) {
+        if(role != GlobalClass.systemManager && role != GlobalClass.storeManager) {
             return AppResponse.paramError("用户角色输入错误，请重新输入");
         }
         //用户密码加密处理
         String pwd = PasswordUtils.generatePassword(userDO.getUserPwd());
-        userDO.setUserId(StringUtil.getCommonCode(2));
         userDO.setUserPwd(pwd);
         userDO.setIsDeleted(0);
         int count = userDao.addUser(userDO);
@@ -75,6 +64,8 @@ public class UserService {
      * @param userCode 选中的用户
      * @param userId 更新人
      * @return
+     * @author WangZebin
+     * @date 2020-03-25
      */
     @Transactional(rollbackFor = Exception.class)
     public AppResponse deleteUser(String userId, String userCode) {
@@ -105,7 +96,7 @@ public class UserService {
         }
         //角色验证
         int role = userDO.getRole();
-        if(role != systemManager | role != manager  | role != driver) {
+        if(role != GlobalClass.systemManager && role != GlobalClass.storeManager) {
             return AppResponse.paramError("用户角色输入错误，请重新输入");
         }
         //用户密码加密处理

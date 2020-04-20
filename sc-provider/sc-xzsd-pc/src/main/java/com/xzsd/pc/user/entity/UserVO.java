@@ -2,14 +2,6 @@ package com.xzsd.pc.user.entity;
 
 public class UserVO {
     /**
-     *页码
-     */
-    private int pageSize;
-    /**
-     * 页数
-     */
-    private int pageNum;
-    /**
      *用户编码
      */
     private String userId;
@@ -54,22 +46,6 @@ public class UserVO {
      * 版本号
      */
     private int version;
-
-    public int getPageSize() {
-        return pageSize;
-    }
-
-    public void setPageSize(int pageSize) {
-        this.pageSize = pageSize;
-    }
-
-    public int getPageNum() {
-        return pageNum;
-    }
-
-    public void setPageNum(int pageNum) {
-        this.pageNum = pageNum;
-    }
 
     public String getUserId() {
         return userId;

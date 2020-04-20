@@ -23,6 +23,7 @@
          book_code,
          author,
          press,
+         seller_name,
          is_deleted,
          create_time,
          create_by,
@@ -48,6 +49,7 @@
             #{bookId},
             #{author},
             #{press},
+            #{sellerName},
             0,
             now(),
             #{createBy},
@@ -121,6 +123,9 @@
         <if test="goodsUrl != null and goodsUrl != ''">
             goods_image = #{goodsUrl},
         </if>
+        <if test="sellerName != null and sellerName != ''">
+            seller_name = #{sellerName},
+        </if>
             modify_by = #{ModifyBy},
             modify_time = now(),
             version = version + 1
@@ -135,13 +140,22 @@
         update t_sys_goods
         set
             state = #{goodsState},
-            modify_by = #{modifyBy},
+        <if test="goodsState == 1">
+            putaway_time = now(),
+        </if>
+            modify_by = #{userId},
             modify_time = now(),
             version = version + 1
         where
-            goods_code = #{goodsId}
+            goods_code in
+        <foreach collection="versionMap" item="item" index="key" open="(" separator="," close=")">
+            #{key}
+        </foreach>
         and is_deleted = 0
-        and version = #{version}
+        and version =
+        <foreach collection="versionMap" item="item" index="key" open="case goods_code" separator=" " close="end">
+            when #{key} then #{item}
+        </foreach>
     </update>
 
     <!-- 查询商品详情 -->
@@ -149,19 +163,22 @@
         select
             tg.goods_code goodsId,
             tg.goods_name goodsName,
+            tg.goods_image goodsUrl,
             tg.goods_price goodsPrice,
+            tg.goods_cost goodsCost,
             tg.sales_num salesNum,
-            tg.inventory,
+            tg.inventory inventory,
             tg.class_one_code classOneId,
             tc1.class_Name classOneName,
             tg.class_one_code classTwoId,
             tc2.class_Name classTwoName,
-            tg.advertise,
-            tg.introduce,
+            tg.advertise advertise,
+            tg.introduce introduce,
             tg.state goodsState,
             tg.putaway_time putawayTime,
             tg.goods_views goodsViews,
-            tg.book_code bookId
+            tg.book_code bookId,
+            tg.seller_name sellerName
         from
             t_sys_goods tg
             left join t_goods_classify tc1 on tg.class_one_code = tc1.class_code
@@ -176,7 +193,9 @@
         SELECT
             tg.goods_code goodsId,
             tg.goods_name goodsName,
+            tg.goods_image goodsUrl,
             tg.goods_price goodsPrice,
+            tg.goods_cost goodsCost,
             tg.sales_num salesNum,
             tg.inventory,
             tc1.class_Name classOneName,
@@ -188,18 +207,18 @@
             tg.goods_views goodsViews,
             tg.book_code bookId,
             tg.version
+            tg.seller_name sellerName
         FROM
             t_sys_goods tg
         LEFT JOIN t_goods_classify tc1 ON tg.class_one_code = tc1.class_code
         LEFT JOIN t_goods_classify tc2 ON tg.class_two_code = tc2.class_code
         WHERE
             is_deleted = 0
-        and tg.state = 1
         <if test="goodsName != null and goodsName != ''">
             and tg.goods_name like concat('%', #{goodsName}, '%')
         </if>
         <if test="goodsState != null and goodsState != ''">
-            and tg.state like concat('%', #{goodsState}, '%')
+            and tg.state = #{goodsState}
         </if>
         <if test="advertise != null and advertise != ''">
             and tg.advertise like concat('%', #{advertise}, '%')

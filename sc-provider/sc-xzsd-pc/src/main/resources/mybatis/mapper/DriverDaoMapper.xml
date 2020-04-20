@@ -178,9 +178,12 @@
             tu.user_pwd driverPwd,
             tu.phone phone,
             tu.id_card idCard,
+            tp.dic_code provinceId,
             tp.dic_name provinceName,
+            tc.dic_code cityId,
             tc.dic_name cityName,
-            ty.dic_name countyName
+            ty.dic_code countyId,
+            ty.dic_name countyName,
         from t_sys_user tu
         left join t_sys_driver td on tu.user_code = td.user_code
         left join t_sys_dictionary tp on td.province_code = tp.dic_code

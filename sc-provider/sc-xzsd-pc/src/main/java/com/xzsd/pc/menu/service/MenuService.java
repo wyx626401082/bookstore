@@ -4,6 +4,7 @@ import com.neusoft.core.restful.AppResponse;
 import com.xzsd.pc.menu.dao.MenuDao;
 import com.xzsd.pc.menu.entity.MenuDO;
 import com.xzsd.pc.menu.entity.MenuVO;
+import com.xzsd.pc.utils.GlobalClass;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -95,7 +96,7 @@ public class MenuService {
      * @date 2020-04-02
      */
     public AppResponse listMenu(int role) {
-        if(0 > role | 2 < role) {
+        if(GlobalClass.superAdmin > role | GlobalClass.storeManager < role) {
             return AppResponse.bizError("无查询菜单列表权限");
         }
         List<MenuVO> menuVOList = menuDao.listMenu(role);

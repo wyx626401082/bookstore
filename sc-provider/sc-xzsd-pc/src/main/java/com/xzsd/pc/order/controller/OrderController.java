@@ -28,18 +28,19 @@ public class OrderController {
 
     /**
      * 修改订单信息
-     * @param orderDO
+     * @param orderId 订单编号，多个用“，”隔开
+     * @param orderState 订单状态
+     * @param version 版本号，多个用“，”隔开
      * @return
      * @author WangZebin
      * @date 2020-04-15
      */
     @PostMapping("updateOrderById")
-    public AppResponse updateOrderById(OrderDO orderDO) {
+    public AppResponse updateOrderById(String orderId, int orderState, String version) {
         try {
             //获取用户id
             String userId = SecurityUtils.getCurrentUserId();
-            orderDO.setManagerId(userId);
-            return orderService.updateOrderById(orderDO);
+            return orderService.updateOrderById(orderId,orderState,version,userId);
         } catch (Exception e) {
             logger.error("修改订单信息错误", e);
             System.out.println(e.toString());

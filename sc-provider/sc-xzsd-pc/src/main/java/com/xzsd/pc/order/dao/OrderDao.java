@@ -5,6 +5,7 @@ import com.xzsd.pc.order.entity.OrderVO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 订单管理接口
@@ -14,10 +15,12 @@ import java.util.List;
 public interface OrderDao {
     /**
      * 修改订单状态
-     * @param orderDO 订单编号 订单状态 版本号 当前用户编号
+     * @param orderState 订单状态
+     * @param versionMap 订单编号->版本号map
+     * @param userId 当前用户编号
      * @return
      */
-    int updateOrderById(OrderDO orderDO);
+    int updateOrderById(@Param("orderState") int orderState, @Param("versionMap") Map<String,Integer> versionMap, @Param("userId") String userId);
 
     /**
      * 查询订单列表

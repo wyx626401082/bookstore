@@ -14,6 +14,20 @@ import java.util.List;
  */
 public interface StoreDao {
     /**
+     * 查找店长用户编号是否存在
+     * @param userId 店长编号
+     * @return
+     */
+    int countManagerId(@Param("userId") String userId);
+
+    /**
+     * 统计店长是否绑定门店
+     * @param userId 店长编号
+     * @return
+     */
+    int countIsStoreManager(@Param("userId") String userId);
+
+    /**
      * 新增门店
      * @param storeDO 门店信息
      * @return

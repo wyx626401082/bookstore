@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author WangZeBin
@@ -32,10 +33,12 @@ public interface GoodsDao {
 
     /**
      * 修改商品状态（上架下架）
-     * @param goodsDO
+     * @param goodsState 商品状态
+     * @param versionMap 商品编号->版本号map
+     * @param userId 当前用户编号
      * @return
      */
-    int updateStateById(GoodsDO goodsDO);
+    int updateStateById(@Param("goodsState") int goodsState, @Param("versionMap") Map<String,Integer> versionMap, @Param("userId") String userId);
 
     /**
      * 删除商品信息

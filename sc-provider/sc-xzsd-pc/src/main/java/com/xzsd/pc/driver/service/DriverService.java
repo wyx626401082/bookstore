@@ -44,7 +44,7 @@ public class DriverService {
         driverDO.setDriverPwd(pwd);
         //生成司机用户编号
         driverDO.setUserId(StringUtil.getCommonCode(2));
-        //生成司机编号
+        //生成司机信息表编号
         driverDO.setDriverId(StringUtil.getCommonCode(2));
         driverDO.setIsDeleted(0);
         //新增司机用户

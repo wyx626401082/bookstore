@@ -75,7 +75,7 @@ public class HostGoodsController {
      * @date 2020-04-14
      */
     @PostMapping("updateHostGoodsById")
-    public AppResponse updateUserById(HostGoodsDO hostGoodsDO) {
+    public AppResponse updateHostGoodsById(HostGoodsDO hostGoodsDO) {
         try {
             //获取用户id
             String userId = SecurityUtils.getCurrentUserId();
