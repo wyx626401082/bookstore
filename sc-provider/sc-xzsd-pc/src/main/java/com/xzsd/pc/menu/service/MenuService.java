@@ -1,6 +1,7 @@
 package com.xzsd.pc.menu.service;
 
 import com.neusoft.core.restful.AppResponse;
+import com.neusoft.util.StringUtil;
 import com.xzsd.pc.menu.dao.MenuDao;
 import com.xzsd.pc.menu.entity.MenuDO;
 import com.xzsd.pc.menu.entity.MenuVO;
@@ -11,8 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.util.Arrays;
 import java.util.List;
-
-import static com.neusoft.core.page.PageUtils.getPageInfo;
 
 /**
  * 菜单管理实现类
@@ -34,11 +33,9 @@ public class MenuService {
     @Transactional(rollbackFor = Exception.class)
     public AppResponse addMenu(MenuDO menuDO) {
         AppResponse appResponse = AppResponse.success("新增菜单成功！");
-        //检测菜单是否存在
-//        int countSame = menuDao.countMenuSame(menuDO);
-//        if(0 != countSame) {
-//            appResponse = AppResponse.success("菜单已存在，请重新输入");
-//        }
+        menuDO.setMenuId(StringUtil.getCommonCode(2));
+        menuDO.setAccessLevel(1);
+        menuDO.setIsDeleted(0);
         //新增菜单
         int count = menuDao.addMenu(menuDO);
         if(0 == count) {

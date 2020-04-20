@@ -6,6 +6,11 @@ import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
+/**
+ * 客户管理接口
+ * @author WangZeBin
+ * @date 2020-04-06
+ */
 public interface CustomerDao {
     /**
      * 查询客户信息列表

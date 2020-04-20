@@ -2,7 +2,6 @@ package com.xzsd.pc.goods.controller;
 
 import com.neusoft.core.restful.AppResponse;
 import com.neusoft.security.client.utils.SecurityUtils;
-import com.xzsd.pc.goods.dao.GoodsDao;
 import com.xzsd.pc.goods.entity.GoodsDO;
 import com.xzsd.pc.goods.service.GoodsService;
 import org.slf4j.Logger;
@@ -24,7 +23,6 @@ public class GoodsController {
 
     @Resource
     GoodsService goodsService;
-
 
     /**
      * 新增商品

@@ -23,9 +23,10 @@ public interface StoreDao {
     /**
      * 统计店长是否绑定门店
      * @param userId 店长编号
+     * @param storeId 门店id 为0时查询该店长是否与某一门店有绑定关系，为门店id则查询店长是否绑定其他门店
      * @return
      */
-    int countIsStoreManager(@Param("userId") String userId);
+    int countIsStoreManager(@Param("userId") String userId,@Param("storeId") String storeId);
 
     /**
      * 新增门店

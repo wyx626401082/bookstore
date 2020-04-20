@@ -5,7 +5,6 @@ import com.xzsd.pc.banner.entity.BannerVO;
 import com.xzsd.pc.banner.entity.GoodsVO;
 import org.apache.ibatis.annotations.Param;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 

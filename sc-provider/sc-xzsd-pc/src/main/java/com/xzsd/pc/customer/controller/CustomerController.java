@@ -32,7 +32,7 @@ public class CustomerController {
      * @date 2020-04-06
      */
     @RequestMapping(value="listCustomer")
-    public AppResponse listUser(CustomerInfo customerInfo) {
+    public AppResponse listCustomer(CustomerInfo customerInfo) {
         try {
             //获取用户id
             String userId = SecurityUtils.getCurrentUserId();

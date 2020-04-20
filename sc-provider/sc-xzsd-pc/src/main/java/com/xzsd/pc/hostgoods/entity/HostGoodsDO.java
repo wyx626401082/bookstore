@@ -3,7 +3,7 @@ package com.xzsd.pc.hostgoods.entity;
 import java.util.Date;
 
 /**
- * 热门商品实体类
+ * 热门商品实体类（传入）
  * @author WangZeBin
  * @date 2020-04-14
  */

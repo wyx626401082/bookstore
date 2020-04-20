@@ -44,6 +44,8 @@ public class ClassifyService {
      * @param classId 商品分类编号
      * @param userId 当前用户编号
      * @return
+     * @author WangZebin
+     * @date 2020-04-05
      */
     @Transactional(rollbackFor = Exception.class)
     public AppResponse deleteClassify(String classId, String userId) {
@@ -65,6 +67,8 @@ public class ClassifyService {
      * 修改商品分类信息
      * @param classifyDO 商品分类信息集合
      * @return
+     * @author WangZebin
+     * @date 2020-04-05
      */
     @Transactional(rollbackFor = Exception.class)
     public AppResponse updateClassifyById(ClassifyDO classifyDO) {
@@ -81,6 +85,8 @@ public class ClassifyService {
     /**
      * 查询商品分类列表
      * @return
+     * @author WangZebin
+     * @date 2020-04-05
      */
     public AppResponse listClassify() {
         List<ClassifyVO> classifyList = classifyDao.listClassify();
@@ -91,6 +97,8 @@ public class ClassifyService {
      * 查询商品分类详情
      * @param classId 商品分类编号
      * @return
+     * @author WangZebin
+     * @date 2020-04-05
      */
     public AppResponse findClassifyById(String classId) {
         ClassifyVO classifyVO = null;

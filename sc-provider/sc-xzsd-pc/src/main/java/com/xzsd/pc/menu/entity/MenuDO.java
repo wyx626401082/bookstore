@@ -2,6 +2,11 @@ package com.xzsd.pc.menu.entity;
 
 import java.util.Date;
 
+/**
+ * 菜单实体类（传入）
+ * @author WangZeBin
+ * @date 2020-04-02
+ */
 public class MenuDO {
     /**
      * 菜单编号

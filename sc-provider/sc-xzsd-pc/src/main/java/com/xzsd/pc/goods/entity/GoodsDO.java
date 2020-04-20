@@ -3,7 +3,7 @@ package com.xzsd.pc.goods.entity;
 import java.util.Date;
 
 /**
- * 商品实体类
+ * 商品实体类（传入）
  * @author WangZeBin
  * date 2020-03-30
  */

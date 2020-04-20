@@ -3,8 +3,9 @@ package com.xzsd.pc.goods.entity;
 import java.util.Date;
 
 /**
- * 商品实体类
+ * 商品实体类（传出）
  * @author WangZeBin
+ * @date 2020-03-30
  */
 public class GoodsVO {
     /**

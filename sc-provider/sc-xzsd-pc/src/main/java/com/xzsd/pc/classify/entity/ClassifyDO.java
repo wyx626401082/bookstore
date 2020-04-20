@@ -2,6 +2,11 @@ package com.xzsd.pc.classify.entity;
 
 import java.util.Date;
 
+/**
+ * 商品分类实体类（传入参数）
+ * @author WangZeBin
+ * @date 2020-04-05
+ */
 public class ClassifyDO {
     /**
      *页码

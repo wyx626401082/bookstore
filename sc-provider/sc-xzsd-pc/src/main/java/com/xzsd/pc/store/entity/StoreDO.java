@@ -3,7 +3,7 @@ package com.xzsd.pc.store.entity;
 import java.util.Date;
 
 /**
- * 门店信息实体类
+ * 门店信息实体类（传入）
  * @author WangZeBin
  * @date 2020-04-17
  */

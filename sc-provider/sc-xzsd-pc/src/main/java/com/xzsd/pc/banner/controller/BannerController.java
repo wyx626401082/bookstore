@@ -97,7 +97,7 @@ public class BannerController {
      * @date 2020-04-14
      */
     @RequestMapping(value="listBanner")
-    public AppResponse listUser(BannerDO bannerDO) {
+    public AppResponse listBanner(BannerDO bannerDO) {
         try {
             return bannerService.listBanner(bannerDO);
         } catch(Exception e) {

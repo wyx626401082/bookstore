@@ -39,9 +39,6 @@ public class MenuController {
             //获取用户Id
             String userId = SecurityUtils.getCurrentUserId();
             menuDO.setCreateBy(userId);
-            menuDO.setMenuId(StringUtil.getCommonCode(2));
-            menuDO.setAccessLevel(1);
-            menuDO.setIsDeleted(0);
             return menuService.addMenu(menuDO);
         } catch (Exception e) {
             logger.error("菜单新增失败", e);
@@ -93,6 +90,7 @@ public class MenuController {
 
     /**
      * 查询菜单列表
+     * @param role 用户角色编号
      * @return
      * @author WangZeBin
      * @date 2020-04-02

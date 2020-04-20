@@ -63,6 +63,9 @@ public interface HostGoodsDao {
 
     /**
      * 修改热门商品展示数量
+     * @param showNumber 展示数量
+     * @param version 版本号
+     * @param userId 用户编号
      * @return
      */
     int updateShowNumber(@Param("showNumber") int showNumber, @Param("version") int version, @Param("userId") String userId);

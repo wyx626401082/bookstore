@@ -1,7 +1,7 @@
 package com.xzsd.pc.driver.entity;
 
 /**
- * 司机信息实体类
+ * 司机信息实体类（传出参数）
  * @author WangZeBin
  * @date 2020-04-18
  */

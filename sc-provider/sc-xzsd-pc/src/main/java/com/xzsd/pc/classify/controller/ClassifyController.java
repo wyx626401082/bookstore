@@ -95,7 +95,7 @@ public class ClassifyController {
      * @date 2020-04-05
      */
     @RequestMapping(value="listClassify")
-    public AppResponse listUser() {
+    public AppResponse listClassify() {
         try {
             return classifyService.listClassify();
         } catch(Exception e) {

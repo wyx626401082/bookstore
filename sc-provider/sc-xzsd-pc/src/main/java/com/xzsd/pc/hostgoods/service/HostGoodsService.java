@@ -33,15 +33,15 @@ public class HostGoodsService {
      */
     @Transactional(rollbackFor = Exception.class)
     public AppResponse addHostGoods(HostGoodsDO hostGoodsDO) {
-        //检验热门商品排序是否存在
-        int countNO = hostGoodsDao.countHostGoodsNO(hostGoodsDO.getHostGoodsNO());
-        if(0 != countNO) {
-            return AppResponse.success("热门商品排序已存在，请重新输入！");
-        }
         //检验商品是否已在热门商品中
         int countGoods = hostGoodsDao.countGoodsId(hostGoodsDO.getGoodsId());
         if(0 != countGoods) {
             return AppResponse.success("商品已存在，请重新输入！");
+        }
+        //检验热门商品排序是否存在
+        int countNO = hostGoodsDao.countHostGoodsNO(hostGoodsDO.getHostGoodsNO());
+        if(0 != countNO) {
+            return AppResponse.success("热门商品排序已存在，请重新输入！");
         }
         //创建热门商品编号
         hostGoodsDO.setHostGoodsId(StringUtil.getCommonCode(2));
@@ -83,15 +83,15 @@ public class HostGoodsService {
     @Transactional(rollbackFor = Exception.class)
     public AppResponse updateHostGoodsById(HostGoodsDO hostGoodsDO) {
         AppResponse appResponse = AppResponse.success("修改热门商品成功");
-        //检验热门商品排序是否存在
-        int countNO = hostGoodsDao.countHostGoodsNO(hostGoodsDO.getHostGoodsNO());
-        if(0 != countNO) {
-            return AppResponse.success("热门商品排序已存在，请重新输入！");
-        }
         //检验商品是否已在热门商品中
         int countGoods = hostGoodsDao.countGoodsId(hostGoodsDO.getGoodsId());
         if(0 != countGoods) {
             return AppResponse.success("商品已存在，请重新输入！");
+        }
+        //检验热门商品排序是否存在
+        int countNO = hostGoodsDao.countHostGoodsNO(hostGoodsDO.getHostGoodsNO());
+        if(0 != countNO) {
+            return AppResponse.success("热门商品排序已存在，请重新输入！");
         }
         //修改热门商品信息
         int count = hostGoodsDao.updateHostGoodsById(hostGoodsDO);
@@ -130,6 +130,8 @@ public class HostGoodsService {
      * @param showNumber 展示数量
      * @param version 版本号
      * @return
+     * @author WangZeBin
+     * @date 2020-04-14
      */
     @Transactional(rollbackFor = Exception.class)
     public AppResponse updateShowNumber(int showNumber, int version, String userId) {

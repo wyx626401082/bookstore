@@ -2,7 +2,8 @@ package com.xzsd.pc.goods.entity;
 
 /**
  * 商品分类实体类
- * @author PC123
+ * @author WangZeBin
+ * @date 2020-03-30
  */
 public class ClassifyVO {
     /**

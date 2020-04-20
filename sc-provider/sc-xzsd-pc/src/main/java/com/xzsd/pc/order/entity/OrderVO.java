@@ -3,7 +3,7 @@ package com.xzsd.pc.order.entity;
 import java.util.Date;
 
 /**
- * 订单管理实体类
+ * 订单管理实体类（传出）
  * @author WangZebin
  * @date 2020-04-15
  */

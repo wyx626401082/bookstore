@@ -41,7 +41,7 @@ public class StoreService {
             return AppResponse.paramError("店长编号不存在");
         }
         //检验店长是否绑定门店
-        int countIs = storeDao.countIsStoreManager(storeDO.getUserId());
+        int countIs = storeDao.countIsStoreManager(storeDO.getUserId(),"0");
         if(0 != countIs) {
             return AppResponse.paramError("店长已绑定门店，请重新选择");
         }
@@ -89,6 +89,16 @@ public class StoreService {
     @Transactional(rollbackFor = Exception.class)
     public AppResponse updateStoreById(StoreDO storeDO) {
         AppResponse appResponse = AppResponse.success("修改门店信息成功");
+        //检验店长编号是否存在
+        int countId = storeDao.countManagerId(storeDO.getUserId());
+        if(0 == countId) {
+            return AppResponse.paramError("店长编号不存在");
+        }
+        //检验店长是否绑定门店
+        int countIs = storeDao.countIsStoreManager(storeDO.getUserId(),storeDO.getStoreId());
+        if(0 != countIs) {
+            return AppResponse.paramError("店长已绑定门店，请重新选择");
+        }
         //修改门店信息
         int count = storeDao.updateStoreById(storeDO);
         if(0 == count) {

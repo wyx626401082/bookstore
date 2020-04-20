@@ -1,6 +1,5 @@
 package com.xzsd.pc.goods.dao;
 
-
 import com.xzsd.pc.goods.entity.ClassifyVO;
 import com.xzsd.pc.goods.entity.GoodsDO;
 import com.xzsd.pc.goods.entity.GoodsVO;
@@ -11,11 +10,25 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * 商品管理接口
  * @author WangZeBin
  * @date 2020-03-30
  */
 @Mapper
 public interface GoodsDao {
+    /**
+     * 统计商品在已启用轮播图中的数量
+     * @param listId 商品id集合
+     * @return
+     */
+    int countBannerId(@Param("listId") List<String> listId);
+
+    /**
+     * 统计商品在热门位商品中的数量
+     * @param listId 商品id集合
+     * @return
+     */
+    int countHostGoodsId(@Param("listId") List<String> listId);
 
     /**
      * 新增商品信息
@@ -42,11 +55,11 @@ public interface GoodsDao {
 
     /**
      * 删除商品信息
-     * @param listGoodsId 商品编号集合
+     * @param listId 商品编号集合
      * @param userId 用户编号
      * @return
      */
-    int deleteGoods(@Param("listGoodsId") List<String> listGoodsId, @Param("userId") String userId);
+    int deleteGoods(@Param("listId") List<String> listId, @Param("userId") String userId);
 
     /**
      * 查询商品详情

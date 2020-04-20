@@ -39,6 +39,6 @@ public class CustomerService {
         }
         //查询客户列表（分页）
         List<CustomerVO> customerVOList = customerDao.listCustomerByPage(customerInfo);
-        return AppResponse.success("查询成功！", getPageInfo(customerVOList));
+        return AppResponse.success("查询客户列表成功！", getPageInfo(customerVOList));
     }
 }

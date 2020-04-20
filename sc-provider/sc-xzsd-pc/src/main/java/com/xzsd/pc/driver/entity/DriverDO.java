@@ -3,7 +3,7 @@ package com.xzsd.pc.driver.entity;
 import java.util.Date;
 
 /**
- * 司机信息实体类
+ * 司机信息实体类（传入参数）
  * @author WangZeBin
  * @date 2020-04-18
  */

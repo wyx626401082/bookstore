@@ -2,6 +2,11 @@ package com.xzsd.pc.classify.entity;
 
 import java.util.List;
 
+/**
+ * 商品分类实体类（传出参数）
+ * @author WangZeBin
+ * @date 2020-04-05
+ */
 public class ClassifyVO {
     /**
      * 分类编号

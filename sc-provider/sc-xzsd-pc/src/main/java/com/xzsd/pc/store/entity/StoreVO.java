@@ -1,5 +1,10 @@
 package com.xzsd.pc.store.entity;
 
+/**
+ * 门店信息实体类（传出）
+ * @author WangZeBin
+ * @date 2020-04-17
+ */
 public class StoreVO {
     /**
      * 门店编号

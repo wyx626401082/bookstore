@@ -1,5 +1,10 @@
 package com.xzsd.pc.menu.entity;
 
+/**
+ * 菜单实体类（传出）
+ * @author WangZeBin
+ * @date 2020-04-02
+ */
 public class MenuVO {
     /**
      * 菜单编号

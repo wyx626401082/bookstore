@@ -16,7 +16,6 @@ import java.util.Map;
 
 import static com.neusoft.core.page.PageUtils.getPageInfo;
 
-
 /**
  * 商品增删改查
  * @author WangZeBin
@@ -56,10 +55,22 @@ public class GoodsService {
      */
     @Transactional(rollbackFor = Exception.class)
     public AppResponse deleteGoods(String goodsId, String userId) {
-        List<String> listGoodsId = Arrays.asList(goodsId.split(","));
         AppResponse appResponse = AppResponse.success("删除商品成功");
+        List<String> listId = Arrays.asList(goodsId.split(","));
+        //查询商品中是否在已启用轮播图中存在
+        int countBanner = goodsDao.countBannerId(listId);
+        if(0 != countBanner) {
+            appResponse = AppResponse.paramError("商品在已启用轮播图中存在，请重新选择！");
+            return appResponse;
+        }
+        //查询商品中是否在热门位商品中存在
+        int countHostGoods = goodsDao.countHostGoodsId(listId);
+        if(0 != countHostGoods) {
+            appResponse = AppResponse.paramError("商品在热门位商品中存在，请重新选择！");
+            return appResponse;
+        }
         //删除商品
-        int count = goodsDao.deleteGoods(listGoodsId,userId);
+        int count = goodsDao.deleteGoods(listId,userId);
         if(0 == count) {
             appResponse = AppResponse.bizError("删除商品失败");
         }

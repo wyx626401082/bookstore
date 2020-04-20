@@ -1,5 +1,10 @@
 package com.xzsd.pc.hostgoods.entity;
 
+/**
+ * 热门商品实体类（传出）
+ * @author WangZeBin
+ * @date 2020-04-14
+ */
 public class HostGoodsVO {
     /**
      * 热门商品编号

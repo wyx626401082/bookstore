@@ -48,6 +48,47 @@ public class StoreController {
     }
 
     /**
+     * 删除门店信息
+     * @param storeId 门店编号
+     * @return
+     * @author WangZeBin
+     * @date 2020-04-17
+     */
+    @PostMapping("deleteStore")
+    public AppResponse deleteStore(String storeId) {
+        try {
+            //获取用户id
+            String userId = SecurityUtils.getCurrentUserId();
+            return storeService.deleteStore(storeId, userId);
+        } catch (Exception e) {
+            logger.error("门店删除错误", e);
+            System.out.println(e.toString());
+            throw e;
+        }
+    }
+
+    /**
+     * 修改门店信息
+     * @param storeDO 门店信息
+     * @return
+     * @author WangZeBin
+     * @date 2020-04-17
+     */
+    @PostMapping("updateStoreById")
+    public AppResponse updateStoreById(StoreDO storeDO) {
+        try {
+            //获取用户id
+            String userId = SecurityUtils.getCurrentUserId();
+            storeDO.setModifyBy(userId);
+            return storeService.updateStoreById(storeDO);
+        } catch (Exception e) {
+            logger.error("修改门店信息错误", e);
+            System.out.println(e.toString());
+            throw e;
+        }
+    }
+
+    /**
      * 查询门店列表（分页）
      * @param storeDO 门店信息
      * @return
