@@ -38,9 +38,11 @@ public class GoodsService {
         goodsDO.setGoodsId(StringUtil.getCommonCode(2));
         goodsDO.setIsDeleted(0);
         //检测是否存在书号相同
-        int countBookId = goodsDao.countSameGoods(goodsDO);
-        if(0 != countBookId) {
-            return AppResponse.paramError("该书号已存在，请重新输入");
+        if(null != goodsDO.getBookId() && !"".equals(goodsDO.getBookId())){
+            int countBookId = goodsDao.countSameGoods(goodsDO);
+            if(0 != countBookId) {
+                return AppResponse.paramError("该书号已存在，请重新输入");
+            }
         }
         //新增商品
         int count = goodsDao.addGoods(goodsDO);
@@ -91,9 +93,11 @@ public class GoodsService {
      */
     public AppResponse updateGoodsById(GoodsDO goodsDO) {
         //检测是否存在书号相同
-        int countBookId = goodsDao.countSameGoods(goodsDO);
-        if(0 != countBookId) {
-            return AppResponse.paramError("该书号已存在，请重新输入");
+        if(null != goodsDO.getBookId() && !"".equals(goodsDO.getBookId())){
+            int countBookId = goodsDao.countSameGoods(goodsDO);
+            if(0 != countBookId) {
+                return AppResponse.paramError("该书号已存在，请重新输入");
+            }
         }
         //修改商品信息
         int count = goodsDao.updateGoodsById(goodsDO);
