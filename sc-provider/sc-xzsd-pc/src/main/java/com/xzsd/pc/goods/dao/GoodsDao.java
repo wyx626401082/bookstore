@@ -31,6 +31,13 @@ public interface GoodsDao {
     int countHostGoodsId(@Param("listId") List<String> listId);
 
     /**
+     * 统计书号相同商品数量
+     * @param goodsDO
+     * @return
+     */
+    int countSameGoods(GoodsDO goodsDO);
+
+    /**
      * 新增商品信息
      * @param goodsDO
      * @return

@@ -14,10 +14,17 @@ import java.util.List;
 public interface ClassifyDao {
     /**
      * 统计商品分类的子分类数目
-     * @param classifyId 商品分类比那好
+     * @param classId 商品分类编号
      * @return
      */
-    int countClassifyChild(String classifyId);
+    int countClassifyChild(@Param("classId") String classId);
+
+    /**
+     * 统计商品分类下商品数量
+     * @param classId 商品分类编号
+     * @return
+     */
+    int countGoodsNum(@Param("classId") String classId);
 
     /**
      * 新增商品分类

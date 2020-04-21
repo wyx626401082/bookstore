@@ -50,9 +50,16 @@ public class ClassifyService {
     @Transactional(rollbackFor = Exception.class)
     public AppResponse deleteClassify(String classId, String userId) {
         AppResponse appResponse = AppResponse.success("删除商品分类成功！");
+        //查询商品分类是否存在子类
         int countChild = classifyDao.countClassifyChild(classId);
         if(0 != countChild ) {
             appResponse = AppResponse.success("该商品分类存在子分类，无法删除");
+            return appResponse;
+        }
+        //查询商品分类是否存在子类
+        int countGoods = classifyDao.countGoodsNum(classId);
+        if(0 != countGoods ) {
+            appResponse = AppResponse.success("该商品分类下存在商品，无法删除");
             return appResponse;
         }
         //删除商品分类

@@ -138,7 +138,7 @@
             tg.is_deleted = 0
         and state = 1
         <if test="goodsName != null and goodsName != ''">
-            and goods_name = #{goodsName}
+            and goods_name like concat('%', #{goodsName}, '%')
         </if>
         <if test="goodsId != null and goodsId != ''">
             and goods_code = #{goodsId}

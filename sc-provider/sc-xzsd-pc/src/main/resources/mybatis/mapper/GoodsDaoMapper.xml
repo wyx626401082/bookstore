@@ -2,6 +2,38 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.xzsd.pc.goods.dao.GoodsDao">
 
+    <!-- 统计商品在已启用轮播图中的数量 -->
+    <select id="countBannerId" resultType="int">
+        select count(1)
+        from t_sys_banner
+        where is_deleted = 0
+        and state = 1
+        and goods_code in
+        <foreach collection="listId" item="item" index="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <!-- 统计商品在热门位商品中的数量 -->
+    <select id="countHostGoodsId" resultType="int">
+        select count(1)
+        from t_goods_host
+        where is_deleted = 0
+        and goods_code in
+        <foreach collection="listId" item="item" index="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <!--统计相同商品数量-->
+    <select id="countSameGoods" parameterType="com.xzsd.pc.goods.entity.GoodsDO" resultType="int">
+        select count(goods_code)
+        from t_sys_goods
+        where is_deleted = 0
+        and book_code = #{bookId}
+        and goods_code &lt;&gt; #{goodsId}
+    </select>
+
     <!--新增商品-->
     <insert id="addGoods" parameterType="com.xzsd.pc.goods.entity.GoodsDO">
         insert into t_sys_goods
@@ -63,6 +95,7 @@
         update t_sys_goods sg
         left join t_goods_host hg on sg.goods_code = hg.goods_code
         left join t_sys_banner tb on sg.goods_code = tb.goods_code
+        left join t_shopping_cart sc on sg.goods_code = sc.goods_code
         set
             sg.is_deleted = 1,
             sg.modify_by = #{userId},
@@ -75,10 +108,14 @@
             tb.is_deleted = 1,
             tb.modify_by = #{userId},
             tb.modify_time = now(),
-            tb.version = hg.version+1
+            tb.version = tb.version+1,
+            sc.is_deleted = 1,
+            sc.modify_by = #{userId},
+            sc.modify_time = now(),
+            sc.version = sc.version+1
         where
             sg.goods_code in
-        <foreach collection="listGoodsId" item="item" index="item" open="(" separator="," close=")">
+        <foreach collection="listId" item="item" index="item" open="(" separator="," close=")">
             #{item}
         </foreach>
     </update>
@@ -131,8 +168,8 @@
             version = version + 1
         where
             goods_code = #{goodsId}
-        and
-            version = #{version}
+        and version = #{version}
+        and state &lt;&gt; 1
     </update>
 
     <!-- 修改商品状态 -->
@@ -178,7 +215,8 @@
             tg.putaway_time putawayTime,
             tg.goods_views goodsViews,
             tg.book_code bookId,
-            tg.seller_name sellerName
+            tg.seller_name sellerName,
+            tg.version version
         from
             t_sys_goods tg
             left join t_goods_classify tc1 on tg.class_one_code = tc1.class_code
@@ -206,14 +244,14 @@
             tg.putaway_time putawayTime,
             tg.goods_views goodsViews,
             tg.book_code bookId,
-            tg.version
+            tg.version,
             tg.seller_name sellerName
         FROM
             t_sys_goods tg
         LEFT JOIN t_goods_classify tc1 ON tg.class_one_code = tc1.class_code
         LEFT JOIN t_goods_classify tc2 ON tg.class_two_code = tc2.class_code
         WHERE
-            is_deleted = 0
+            tg.is_deleted = 0
         <if test="goodsName != null and goodsName != ''">
             and tg.goods_name like concat('%', #{goodsName}, '%')
         </if>

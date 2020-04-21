@@ -37,11 +37,16 @@ public class GoodsService {
     public AppResponse addGoods(GoodsDO goodsDO) {
         goodsDO.setGoodsId(StringUtil.getCommonCode(2));
         goodsDO.setIsDeleted(0);
+        //检测是否存在书号相同
+        int countBookId = goodsDao.countSameGoods(goodsDO);
+        if(0 != countBookId) {
+            return AppResponse.paramError("该书号已存在，请重新输入");
+        }
+        //新增商品
         int count = goodsDao.addGoods(goodsDO);
         if(0 == count) {
             return AppResponse.bizError("新增商品失败，请重试！");
         }
-
         return AppResponse.success("新增商品成功！");
     }
 
@@ -85,6 +90,12 @@ public class GoodsService {
      * @date 2020-03-30
      */
     public AppResponse updateGoodsById(GoodsDO goodsDO) {
+        //检测是否存在书号相同
+        int countBookId = goodsDao.countSameGoods(goodsDO);
+        if(0 != countBookId) {
+            return AppResponse.paramError("该书号已存在，请重新输入");
+        }
+        //修改商品信息
         int count = goodsDao.updateGoodsById(goodsDO);
         if(0 == count) {
             return AppResponse.versionError("数据有变化，请刷新！");

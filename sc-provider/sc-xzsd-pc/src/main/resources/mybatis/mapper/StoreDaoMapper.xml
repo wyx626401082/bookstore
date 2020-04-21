@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.xzsd.pc.store.dao.StoreDao">
+
     <!-- 查找店长编号是否存在 -->
     <select id="countManagerId" resultType="int">
         select count(user_code)
@@ -19,6 +20,9 @@
         and role = 2
         and tu.is_deleted = 0
         and ts.is_deleted = 0
+        <if test='storeId != "0"' >
+            and ts.store_code &lt;&gt; #{storeId}
+        </if>
     </select>
 
     <!-- 新增门店 -->
@@ -61,8 +65,8 @@
 
     <!-- 删除门店 -->
     <update id="deleteStore">
-        update t_store
-        set is_deleted = 1
+        update t_sys_store
+        set is_deleted = 1,
             modify_time = now(),
             modify_by = #{userId},
             version = version+1
@@ -125,16 +129,16 @@
             on ts.user_code = tu.user_code
         where ts.is_deleted = 0
         <if test="userName != null and userName != ''">
-            and tu.user_name = #{userName}
+            and tu.user_name like concat('%', #{userName}, '%')
         </if>
         <if test="storeId != null and storeId != ''">
             and ts.store_code = #{storeId}
         </if>
         <if test="storeName != null and storeName != ''">
-            and ts.store_name = #{storeName}
+            and ts.store_name like concat('%', #{storeName}, '%')
         </if>
         <if test="licenseId != null and licenseId != ''">
-            and ts.license_code = #{licenseId}
+            and ts.license_code = like concat('%', #{licenseId}, '%')
         </if>
         <if test="provinceId != null and provinceId != ''">
             and ts.province_code = #{provinceId}
@@ -166,7 +170,8 @@
             tc.dic_name cityName,
             ty.dic_code countyId,
             ty.dic_name countyName,
-            ts.store_address detailAddress
+            ts.store_address detailAddress,
+            ts.version version
         from t_sys_store ts
         left join t_sys_dictionary tp on ts.province_code = tp.dic_code
         left join t_sys_dictionary tc on ts.city_code = tc.dic_code

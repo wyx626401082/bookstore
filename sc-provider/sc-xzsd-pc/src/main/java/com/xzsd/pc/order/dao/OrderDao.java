@@ -34,5 +34,5 @@ public interface OrderDao {
      * @param orderId 订单编号
      * @return
      */
-    OrderVO findOrderById(@Param("orderId") String orderId);
+    List<OrderVO> findOrderById(@Param("orderId") String orderId);
 }

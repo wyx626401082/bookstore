@@ -142,7 +142,8 @@
             email,
             id_card idCard,
             user_pwd userPwd,
-            role
+            role,
+            version
         from t_sys_user
         where user_code = #{userId}
         and is_deleted = 0

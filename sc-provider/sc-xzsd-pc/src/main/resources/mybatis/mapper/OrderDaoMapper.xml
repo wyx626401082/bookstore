@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.xzsd.pc.order.dao.OrderDao">
+
     <!-- 修改订单信息 -->
     <update id="updateOrderById" parameterType="com.xzsd.pc.order.entity.OrderDO">
         update t_sys_order
@@ -38,7 +39,7 @@
             and ss.user_code = #{managerId}
         </if>
         <if test="userName != null and userName != ''">
-            and so.buyer_name = #{userName}
+            and so.buyer_name like concat('%', #{userName}, '%')
         </if>
         <if test="userPhone != null and userPhone != ''">
             and so.buyer_phone = #{userPhone}
@@ -70,12 +71,14 @@
             tg.goods_name goodsName,
             od.goods_code goodsId,
             od.goods_num goodsNumber,
-            od.goods_price goodsPrice
+            od.goods_price goodsPrice,
+            so.version version
         from t_sys_order so
         left join t_order_detail od on so.order_code = od.order_code
         left join t_sys_goods tg on od.goods_code = tg.goods_code
         where so.is_deleted = 0
         and od.is_deleted = 0
         and so.order_code = #{orderId}
+        order by so.goods_code desc
     </select>
 </mapper>

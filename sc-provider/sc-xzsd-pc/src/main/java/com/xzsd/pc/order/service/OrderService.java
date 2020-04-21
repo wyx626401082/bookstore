@@ -88,18 +88,15 @@ public class OrderService {
      * @date 2020-04-15
      */
     public AppResponse findOrderById(String orderId) {
-        OrderVO orderVO = null;
-        orderVO = orderDao.findOrderById(orderId);
-        if (orderVO == null) {
-            return AppResponse.notFound("无订单详情查询结果");
-        } else {
-            //计算商品总价
-            BigDecimal num = new BigDecimal(orderVO.getGoodsNumber());
-            BigDecimal price = new BigDecimal(orderVO.getGoodsPrice());
+        List<OrderVO>  orderVOList = orderDao.findOrderById(orderId);
+        //计算商品总价
+        for(int i = 0; i < orderVOList.size(); i++) {
+            BigDecimal num = new BigDecimal(orderVOList.get(i).getGoodsNumber());
+            BigDecimal price = new BigDecimal(orderVOList.get(i).getGoodsPrice());
             String totalPrice = price.multiply(num).toString();
-            orderVO.setTotalPrice(totalPrice);
+            orderVOList.get(i).setTotalPrice(totalPrice);
         }
-        return AppResponse.success("查询订单详情成功", orderVO);
+        return AppResponse.success("查询订单详情成功", orderVOList);
     }
 
 }

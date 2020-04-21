@@ -50,6 +50,7 @@ public interface MenuDao {
 
     /**
      * 查询菜单详情
+     * @param menuId 菜单编号
      * @return
      */
     MenuVO findMenuById(String menuId);

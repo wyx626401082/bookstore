@@ -152,7 +152,7 @@
             and tu.user_code = #{driverId}
         </if>
         <if test="driverAcct != null and driverAcct != ''">
-            and tu.user_acct = #{driverAcct}
+            and tu.user_acct like concat('%', #{driverAcct}, '%')
         </if>
         <if test="provinceId != null and provinceId != ''">
             and td.province_code = #{provinceId}
@@ -184,6 +184,7 @@
             tc.dic_name cityName,
             ty.dic_code countyId,
             ty.dic_name countyName,
+            tu.version version
         from t_sys_user tu
         left join t_sys_driver td on tu.user_code = td.user_code
         left join t_sys_dictionary tp on td.province_code = tp.dic_code
