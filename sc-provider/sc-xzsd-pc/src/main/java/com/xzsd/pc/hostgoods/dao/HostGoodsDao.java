@@ -3,6 +3,7 @@ package com.xzsd.pc.hostgoods.dao;
 import com.xzsd.pc.hostgoods.entity.HostGoodsDO;
 import com.xzsd.pc.hostgoods.entity.HostGoodsVO;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.security.access.method.P;
 
 import java.util.List;
 
@@ -15,16 +16,25 @@ public interface HostGoodsDao {
     /**
      * 统计相同排序数量
      * @param hostGoodsNO 热门商品排序
+     * @param hostGoodsId 热门商品编号
      * @return
      */
-    int countHostGoodsNO(int hostGoodsNO);
+    int countHostGoodsNO(@Param("hostGoodsNO") int hostGoodsNO, @Param("hostGoodsId") String hostGoodsId);
 
     /**
-     * 统计相同商品数量
+     * 统计热门商品中相同商品数量
      * @param goodsId 商品编号
+     * @param hostGoodsId 热门商品编号
      * @return
      */
-    int countGoodsId(String goodsId);
+    int countGoodsAtHost(@Param("goodsId") String goodsId, @Param("hostGoodsId") String hostGoodsId);
+
+    /**
+     * 查询商品是否存在
+     * @param goodsId
+     * @return
+     */
+    int countGoodsNum(@Param("goodsId") String goodsId);
 
     /**
      * 新增热门商品

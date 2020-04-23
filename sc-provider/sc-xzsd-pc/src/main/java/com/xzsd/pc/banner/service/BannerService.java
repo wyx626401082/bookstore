@@ -24,6 +24,13 @@ public class BannerService {
     @Resource
     BannerDao bannerDao;
 
+    /**
+     * 新增轮播图
+     * @param bannerDO
+     * @return
+     * @author WangZeBin
+     * @date 2020-04-14
+     */
     @Transactional(rollbackFor = Exception.class)
     public AppResponse addBanner(BannerDO bannerDO) {
         //新增轮播图
@@ -40,6 +47,8 @@ public class BannerService {
      * @param bannerId 轮播图编号 多个用“，”隔开
      * @param userId 当前用户编号
      * @return
+     * @author WangZeBin
+     * @date 2020-04-14
      */
     @Transactional(rollbackFor = Exception.class)
     public AppResponse deleteBanner(String bannerId, String userId) {
@@ -60,6 +69,8 @@ public class BannerService {
      * @param version 版本号 多个用“，”隔开
      * @param userId 当前用户编号
      * @return
+     * @author WangZeBin
+     * @date 2020-04-14
      */
     @Transactional(rollbackFor = Exception.class)
     public AppResponse updateBannerById(String bannerId, int bannerState, String version, String userId) {
@@ -75,15 +86,23 @@ public class BannerService {
             int intVersion = Integer.valueOf(listVersion.get(i));
             versionMap.put(listId.get(i),intVersion);
         }
-        //检验轮播图排序是否存在
-        int countBannerNO = bannerDao.countBannerNO(listId);
-        if(0 != countBannerNO) {
-            return AppResponse.paramError("存在轮播图排序重复，请重新选择！");
-        }
-        //检验商品是否在启用轮播图中存在
-        int countGoodsId = bannerDao.countGoodsId(listId);
-        if(0 != countGoodsId) {
-            return AppResponse.paramError("商品在已启用轮播图中存在，请重新选择！");
+        //轮播图启用检测
+        if(1 == bannerState) {
+            //检测选择的轮播图是否存在排序重复
+            int countSameNO = bannerDao.countSameNO(listId);
+            if(1 < countSameNO) {
+                return AppResponse.paramError("选择的轮播图中存在排序重复，请重新选择！");
+            }
+            //检验在已启用轮播图排序是否存在
+            int countBannerNO = bannerDao.countBannerNO(listId);
+            if(0 != countBannerNO) {
+                return AppResponse.paramError("存在与已启用轮播图排序重复，请重新选择！");
+            }
+            //检验商品是否在启用轮播图中存在
+            int countGoodsId = bannerDao.countGoodsId(listId);
+            if(0 != countGoodsId) {
+                return AppResponse.paramError("商品在已启用轮播图中存在，请重新选择！");
+            }
         }
         //修改轮播图信息
         int count = bannerDao.updateBannerById(bannerState,versionMap,userId);
@@ -98,6 +117,8 @@ public class BannerService {
      * 查询轮播图列表（分页）
      * @param bannerDO
      * @return
+     * @author WangZeBin
+     * @date 2020-04-14
      */
     public AppResponse listBanner(BannerDO bannerDO) {
         List<BannerVO> bannerVOList = bannerDao.listBannerByPage(bannerDO);
@@ -108,6 +129,8 @@ public class BannerService {
      * 查询商品选择列表（分页）
      * @param bannerDO
      * @return
+     * @author WangZeBin
+     * @date 2020-04-14
      */
     public AppResponse listGoods(BannerDO bannerDO) {
         List<GoodsVO> goodsVOList = bannerDao.listGoodsByPage(bannerDO);

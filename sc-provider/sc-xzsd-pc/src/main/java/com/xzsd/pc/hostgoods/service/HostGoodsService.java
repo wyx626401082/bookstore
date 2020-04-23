@@ -33,19 +33,25 @@ public class HostGoodsService {
      */
     @Transactional(rollbackFor = Exception.class)
     public AppResponse addHostGoods(HostGoodsDO hostGoodsDO) {
-        //检验商品是否已在热门商品中
-        int countGoods = hostGoodsDao.countGoodsId(hostGoodsDO.getGoodsId());
-        if(0 != countGoods) {
-            return AppResponse.success("商品已存在，请重新输入！");
-        }
-        //检验热门商品排序是否存在
-        int countNO = hostGoodsDao.countHostGoodsNO(hostGoodsDO.getHostGoodsNO());
-        if(0 != countNO) {
-            return AppResponse.success("热门商品排序已存在，请重新输入！");
-        }
         //创建热门商品编号
         hostGoodsDO.setHostGoodsId(StringUtil.getCommonCode(2));
         hostGoodsDO.setIsDeleted(0);
+        //查询商品是否存在
+        int countIsGoods = hostGoodsDao.countGoodsNum(hostGoodsDO.getGoodsId());
+        if(0 == countIsGoods) {
+            return AppResponse.paramError("商品不存在，请重新输入！");
+        }
+        //检验商品是否已在热门商品中
+        int countGoods = hostGoodsDao.countGoodsAtHost(hostGoodsDO.getGoodsId(),hostGoodsDO.getHostGoodsId());
+        if(0 != countGoods) {
+            return AppResponse.paramError("商品已存在热门商品中，请重新输入！");
+        }
+        //检验热门商品排序是否存在
+        int countNO = hostGoodsDao.countHostGoodsNO(hostGoodsDO.getHostGoodsNO(),hostGoodsDO.getHostGoodsId());
+        if(0 != countNO) {
+            return AppResponse.paramError("热门商品排序已存在，请重新输入！");
+        }
+        //新增热门商品
         int count = hostGoodsDao.addHostGoods(hostGoodsDO);
         if(0 == count) {
             return AppResponse.bizError("新增热门商品失败，请重试！");
@@ -82,16 +88,21 @@ public class HostGoodsService {
      */
     @Transactional(rollbackFor = Exception.class)
     public AppResponse updateHostGoodsById(HostGoodsDO hostGoodsDO) {
-        AppResponse appResponse = AppResponse.success("修改热门商品成功");
+        AppResponse appResponse = AppResponse.success("修改热门商品成功！");
+        //查询商品是否存在
+        int countIsGoods = hostGoodsDao.countGoodsNum(hostGoodsDO.getGoodsId());
+        if(0 == countIsGoods) {
+            return AppResponse.paramError("商品不存在，请重新输入！");
+        }
         //检验商品是否已在热门商品中
-        int countGoods = hostGoodsDao.countGoodsId(hostGoodsDO.getGoodsId());
+        int countGoods = hostGoodsDao.countGoodsAtHost(hostGoodsDO.getGoodsId(),hostGoodsDO.getHostGoodsId());
         if(0 != countGoods) {
-            return AppResponse.success("商品已存在，请重新输入！");
+            return AppResponse.paramError("商品已存在热门商品中，请重新输入！");
         }
         //检验热门商品排序是否存在
-        int countNO = hostGoodsDao.countHostGoodsNO(hostGoodsDO.getHostGoodsNO());
+        int countNO = hostGoodsDao.countHostGoodsNO(hostGoodsDO.getHostGoodsNO(),hostGoodsDO.getHostGoodsId());
         if(0 != countNO) {
-            return AppResponse.success("热门商品排序已存在，请重新输入！");
+            return AppResponse.paramError("热门商品排序已存在，请重新输入！");
         }
         //修改热门商品信息
         int count = hostGoodsDao.updateHostGoodsById(hostGoodsDO);

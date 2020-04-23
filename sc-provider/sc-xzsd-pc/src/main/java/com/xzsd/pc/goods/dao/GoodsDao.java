@@ -84,9 +84,9 @@ public interface GoodsDao {
 
     /**
      * 查询商品分类列表
-     * @param classId 分类编码
+     * @param classifyId 分类编码
      * @return
      */
-    List<ClassifyVO> listClassify(@Param("classId") String classId);
+    List<ClassifyVO> listClassify(@Param("classifyId") String classifyId);
 
 }

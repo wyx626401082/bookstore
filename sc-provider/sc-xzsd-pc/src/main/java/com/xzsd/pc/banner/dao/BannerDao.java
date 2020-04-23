@@ -24,9 +24,16 @@ public interface BannerDao {
     /**
      * 统计轮播图中的商品数量
      * @param listId 轮播图编号集合
-     * @return
+     * @return 最大重复数
      */
     int countGoodsId(@Param("listId") List<String> listId);
+
+    /**
+     * 检测选择轮播图是否存在排序重复
+     * @param listId 轮播图编号集合
+     * @return
+     */
+    int countSameNO(@Param("listId") List<String> listId);
 
     /**
      * 新增轮播图

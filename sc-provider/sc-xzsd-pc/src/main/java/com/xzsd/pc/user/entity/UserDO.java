@@ -81,7 +81,7 @@ public class UserDO {
     /**
      * 更新者
      */
-    private String ModifyBy;
+    private String modifyBy;
     /**
      * 版本号
      */
@@ -224,11 +224,11 @@ public class UserDO {
     }
 
     public String getModifyBy() {
-        return ModifyBy;
+        return modifyBy;
     }
 
     public void setModifyBy(String modifyBy) {
-        ModifyBy = modifyBy;
+        modifyBy = modifyBy;
     }
 
     public int getVersion() {

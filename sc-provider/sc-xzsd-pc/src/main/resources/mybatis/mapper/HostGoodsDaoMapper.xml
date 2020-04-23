@@ -2,19 +2,30 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.xzsd.pc.hostgoods.dao.HostGoodsDao">
 
-    <!-- 统计相同排序数量 -->
-    <select id="countHostGoodsNO" parameterType="int" resultType="int">
+    <!-- 统计热门商品中相同排序数量 -->
+    <select id="countHostGoodsNO" resultType="int">
         select count(host_code)
         from t_goods_host
         where
             is_deleted = 0
         and host_no = #{hostGoodsNO}
+        and host_code &lt;&gt; #{hostGoodsId}
     </select>
 
-    <!-- 统计相同商品数量 -->
-    <select id="countGoodsId" parameterType="java.lang.String" resultType="int">
+    <!-- 统计热门商品中相同商品数量 -->
+    <select id="countGoodsAtHost" parameterType="java.lang.String" resultType="int">
         select count(host_code)
         from t_goods_host
+        where
+            is_deleted = 0
+        and goods_code = #{goodsId}
+        and host_code &lt;&gt; #{hostGoodsId}
+    </select>
+
+    <!-- 检测商品是否存在 -->
+    <select id="countGoodsNum" parameterType="java.lang.String" resultType="int">
+        select count(goods_code)
+        from t_sys_goods
         where
             is_deleted = 0
         and goods_code = #{goodsId}
@@ -42,24 +53,24 @@
              now(),
              #{createBy},
              now(),
-             #{ModifyBy},
+             #{modifyBy},
              0)
     </insert>
 
     <!-- 删除热门商品 -->
     <update id="deleteHostGoods">
         update t_goods_host
-        set is_deleted = 1
+        set is_deleted = 1,
             modify_time = now(),
             modify_by = #{userId},
             version = version+1
         where host_code in
-        <foreach item="item" index="index" collection="listId" open="(" separator="," close=")">
+        <foreach collection="listId" item="item" index="index" open="(" separator="," close=")">
             #{item}
         </foreach>
     </update>
 
-    <!-- 修改热门商品排序 -->
+    <!-- 修改热门商品 -->
     <update id="updateHostGoodsById" parameterType="com.xzsd.pc.hostgoods.entity.HostGoodsDO">
         update t_goods_host
         set goods_code = #{goodsId},
@@ -85,7 +96,6 @@
         left join t_sys_goods sg on hg.goods_code = sg.goods_code
         where hg.is_deleted = 0
         and sg.is_deleted = 0
-        and hg.version = #{version}
         <if test="goodsId != null and goodsId != ''">
             and hg.goods_code like concat('%', #{goodsId}, '%')
         </if>

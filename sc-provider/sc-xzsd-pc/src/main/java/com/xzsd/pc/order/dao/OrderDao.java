@@ -14,6 +14,13 @@ import java.util.Map;
  */
 public interface OrderDao {
     /**
+     * 查询订单状态
+     * @param listId 订单编号
+     * @return
+     */
+    List<Integer> countOrderState(@Param("listId") List<String> listId);
+
+    /**
      * 修改订单状态
      * @param orderState 订单状态
      * @param versionMap 订单编号->版本号map

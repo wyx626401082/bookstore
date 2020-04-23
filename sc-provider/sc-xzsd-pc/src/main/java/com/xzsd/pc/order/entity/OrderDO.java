@@ -1,7 +1,5 @@
 package com.xzsd.pc.order.entity;
 
-import java.util.Date;
-
 /**
  * 订单管理实体类（传入）
  * @author WangZebin
@@ -27,7 +25,9 @@ public class OrderDO {
     /**
      * 订单状态：0订单取消，1订单到货，2取消到货，3订单已取货，4取消已取货
      */
-    private int orderState;
+    private String orderState;
+
+    private int state;
     /**
      * 当前登录用户角色
      */
@@ -85,12 +85,20 @@ public class OrderDO {
         this.orderId = orderId;
     }
 
-    public int getOrderState() {
+    public String getOrderState() {
         return orderState;
     }
 
-    public void setOrderState(int orderState) {
+    public void setOrderState(String orderState) {
         this.orderState = orderState;
+    }
+
+    public int getState() {
+        return state;
+    }
+
+    public void setState(int state) {
+        this.state = state;
     }
 
     public int getRole() {

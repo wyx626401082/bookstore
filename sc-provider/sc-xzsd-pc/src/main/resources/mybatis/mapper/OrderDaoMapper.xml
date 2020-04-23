@@ -1,11 +1,36 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.xzsd.pc.order.dao.OrderDao">
+    <!-- 查询订单状态 -->
+    <select id="countOrderState" resultType="int">
+        select
+            order_state
+        from t_sys_order
+        where order_code in
+        <foreach item="item" index="index" collection="listId" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
 
     <!-- 修改订单信息 -->
     <update id="updateOrderById" parameterType="com.xzsd.pc.order.entity.OrderDO">
         update t_sys_order
-        set order_state = #{orderState},
+        set
+        <if test="orderState == 0">
+            order_state = 5,
+        </if>
+        <if test="orderState == 1">
+            order_state = 1,
+        </if>
+        <if test="orderState == 2">
+            order_state = 0,
+        </if>
+        <if test="orderState == 3">
+            order_state = 2,
+        </if>
+        <if test="orderState == 4">
+            order_state = 1,
+        </if>
             modify_time = now(),
             modify_by = #{userId},
             version = version+1
@@ -14,7 +39,7 @@
             #{key}
         </foreach>
         and version =
-        <foreach collection="versionMap" item="item" index="key" open="case goods_code" separator=" " close="end">
+        <foreach collection="versionMap" item="item" index="key" open="case order_code" separator=" " close="end">
             when #{key} then #{item}
         </foreach>
     </update>
@@ -27,10 +52,11 @@
             so.order_state orderState,
             so.store_code storeId,
             so.buyer_code userId,
-            so.buyer_name userName,
-            so.buyer_phone userPhone,
+            su.user_name userName,
+            su.phone userPhone,
             DATE_FORMAT(so.pay_time,'%Y-%m-%d %H:%i:%s') payTime
         from t_sys_order so
+        left join t_sys_user su on so.buyer_code = su.user_code
         <if test="role == 2">
             left join t_sys_store ss on so.store_code = ss.store_code
         </if>
@@ -39,13 +65,13 @@
             and ss.user_code = #{managerId}
         </if>
         <if test="userName != null and userName != ''">
-            and so.buyer_name like concat('%', #{userName}, '%')
+            and su.user_name like concat('%', #{userName}, '%')
         </if>
         <if test="userPhone != null and userPhone != ''">
-            and so.buyer_phone = #{userPhone}
+            and su.phone = #{userPhone}
         </if>
-        <if test="orderState != null and orderState != ''">
-            and so.order_state = #{orderState}
+        <if test=" orderState != null and orderState != ''">
+            and so.order_state = #{state}
         </if>
         <if test="orderId != null and orderId != ''">
             and so.order_code = #{orderId}
@@ -79,6 +105,7 @@
         where so.is_deleted = 0
         and od.is_deleted = 0
         and so.order_code = #{orderId}
-        order by so.goods_code desc
+        order by so.create_time desc,
+            od.goods_code desc
     </select>
 </mapper>

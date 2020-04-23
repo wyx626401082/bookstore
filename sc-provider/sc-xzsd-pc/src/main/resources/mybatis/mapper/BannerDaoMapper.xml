@@ -40,6 +40,26 @@
         and b.state = 1
     </select>
 
+    <!-- 检测选择轮播图是否存在排序重复 -->
+    <select id="countSameNO" resultType="int">
+        SELECT
+            count( * ) AS count
+        FROM
+            t_sys_banner
+        WHERE
+            banner_code IN
+        <foreach collection="listId" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        GROUP BY
+            banner_no
+        HAVING
+            count > 1
+        ORDER BY
+            count DESC
+            LIMIT 1
+    </select>
+
     <!-- 新增轮播图 -->
     <insert id="addBanner" parameterType="com.xzsd.pc.banner.entity.BannerDO">
         insert into t_sys_banner
@@ -76,7 +96,7 @@
     <update id="deleteBanner" parameterType="com.xzsd.pc.banner.entity.BannerDO">
         update t_sys_banner
         set
-            is_deleted = 0,
+            is_deleted = 1,
             state = 0,
             modify_time = now(),
             modify_by = #{userId},
@@ -91,10 +111,12 @@
     <update id="updateBannerById" >
         update t_sys_banner
         set
-        state = #{bannerState},
-        modify_time = now(),
-        modify_by = #{userId},
-        version = version+1
+        <if test="bannerState == 0 or bannerState == 1 ">
+            state = #{bannerState},
+        </if>
+            modify_time = now(),
+            modify_by = #{userId},
+            version = version+1
         where banner_code in
         <foreach collection="versionMap" item="item" index="key" open="(" separator="," close=")">
             #{key}
@@ -112,6 +134,7 @@
             banner_code bannerId,
             banner_no bannerNO,
             banner_url bannerUrl,
+            state bannerState,
             start_time startTime,
             end_time endTime,
             version

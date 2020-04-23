@@ -1,7 +1,5 @@
 package com.xzsd.pc.goods.entity;
 
-import java.util.Date;
-
 /**
  * 商品实体类（传出）
  * @author WangZeBin
@@ -55,7 +53,7 @@ public class GoodsVO {
     /**
      * 二级分类名称
      */
-    private String classtwoName;
+    private String classTwoName;
     /**
      * 书号
      */
@@ -83,7 +81,7 @@ public class GoodsVO {
     /**
      * 上架时间
      */
-    private Date putawayTime;
+    private String putawayTime;
     /**
      * 浏览量
      */
@@ -193,12 +191,12 @@ public class GoodsVO {
         this.classOneName = classOneName;
     }
 
-    public String getClasstwoName() {
-        return classtwoName;
+    public String getClassTwoName() {
+        return classTwoName;
     }
 
-    public void setClasstwoName(String classtwoName) {
-        this.classtwoName = classtwoName;
+    public void setClassTwoName(String classTwoName) {
+        this.classTwoName = classTwoName;
     }
 
     public String getBookId() {
@@ -241,11 +239,11 @@ public class GoodsVO {
         this.introduce = introduce;
     }
 
-    public Date getPutawayTime() {
+    public String getPutawayTime() {
         return putawayTime;
     }
 
-    public void setPutawayTime(Date putawayTime) {
+    public void setPutawayTime(String putawayTime) {
         this.putawayTime = putawayTime;
     }
 

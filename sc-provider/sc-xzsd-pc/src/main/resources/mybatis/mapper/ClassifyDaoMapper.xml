@@ -99,7 +99,8 @@
         where
             cf.is_deleted = 0
         and cf.parent_code = 0
-        order by cf.create_time desc
+        order by cf.create_time desc,
+            cc.create_time desc
     </select>
 
     <!-- 查询商品分类详情 -->

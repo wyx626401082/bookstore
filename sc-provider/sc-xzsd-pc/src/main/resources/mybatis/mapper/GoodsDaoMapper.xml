@@ -207,12 +207,11 @@
             tg.inventory inventory,
             tg.class_one_code classOneId,
             tc1.class_Name classOneName,
-            tg.class_one_code classTwoId,
+            tg.class_two_code classTwoId,
             tc2.class_Name classTwoName,
             tg.advertise advertise,
             tg.introduce introduce,
             tg.state goodsState,
-            tg.putaway_time putawayTime,
             tg.goods_views goodsViews,
             tg.book_code bookId,
             tg.seller_name sellerName,
@@ -222,7 +221,7 @@
             left join t_goods_classify tc1 on tg.class_one_code = tc1.class_code
             left join t_goods_classify tc2 on tg.class_two_code = tc2.class_code
         where
-            is_deleted = 0
+            tg.is_deleted = 0
         and tg.goods_code = #{goodsId}
     </select>
 
@@ -277,8 +276,8 @@
           class_name classifyName
         from t_goods_classify
         where
-          parent_code = #{classId}
-        and is_delete = 0
+          parent_code = #{classifyId}
+        and is_deleted = 0
         order by create_time desc
     </select>
 </mapper>

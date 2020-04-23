@@ -119,6 +119,9 @@ public class GoodsService {
      */
     @Transactional(rollbackFor =  Exception.class)
     public AppResponse updateStateById(String goodsId, int goodsState, String version, String userId) {
+        if(goodsState != 1 && goodsState != 2) {
+            return AppResponse.paramError("商品状态参数输入错误，请重新输入！");
+        }
         //将商品id，以及与其对应版本号转化为List
         List<String> listId = Arrays.asList(goodsId.split(","));
         List<String> listVersion = Arrays.asList(version.split(","));
