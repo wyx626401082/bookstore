@@ -21,7 +21,7 @@ import javax.annotation.Resource;
 @RestController
 @RequestMapping("/user")
 public class UserController {
-    private static final Logger logger = (org.slf4j.Logger) LoggerFactory.getLogger(UserController.class);
+    private static final Logger logger = (Logger) LoggerFactory.getLogger(UserController.class);
 
     @Resource
     UserService userService;

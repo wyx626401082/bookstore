@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xzsd.app.order.dao.OrderDao">
+
+    <!-- 查询商品数量及名称 -->
+    <select id="countGoodsNumber" resultType="com.xzsd.app.order.entity.GoodsInfo">
+        select
+            goods_name goodsName,
+            inventory goodsNum
+        from t_sys_goods
+        where goods_code in
+        <foreach item="item" index="index" collection="listId" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <!-- 新增订单（主表） -->
+    <insert id="addOrder" parameterType="com.xzsd.app.order.entity.OrderDO">
+        insert into t_sys_order
+            (order_code,
+             buyer_code,
+             order_money,
+             pay_money,
+             order_state,
+             pay_time,
+             store_code,
+             is_deleted,
+             create_time,
+             create_by,
+             modify_time,
+             modify_by,
+             version)
+        values
+            (#{orderId},
+             #{userId},
+             #{orderMoney},
+             #{orderMoney},
+             0,
+             now(),
+             #{storeId},
+             #{isDeleted},
+             now(),
+             #{createBy},
+             now(),
+             #{modifyBy},
+             0)
+    </insert>
+    
+    <!-- 将订单信息保存到订单明细表 -->
+    <insert id="addOrderDetail" >
+        insert into t_order_detail
+            (detail_code,
+             order_code,
+             goods_code,
+             goods_num,
+             goods_price,
+             shopping_cart_code,
+             is_deleted,
+             create_time,
+             create_by,
+             modify_time,
+             modify_by,
+             version)
+        values
+             <foreach collection="orderDTOList" item="item" index="index" separator=",">
+                 (#{item.orderDetailId},
+                  #{item.orderId},
+                  #{item.goodsId},
+                  #{item.goodsNumber},
+                  #{item.goodsPrice},
+                  #{item.shoppingCartId},
+                  #{item.isDeleted},
+                  now(),
+                  #{item.userId},
+                  now(),
+                  #{item.userId},
+                  0)
+             </foreach>
+    </insert>
+
+    <!-- 更新商品库存(新增) -->
+    <update id="updateGoodsInventory">
+        update t_sys_goods
+        set
+            modify_by = #{userId},
+            modify_time = now(),
+            version = version + 1,
+            inventory = inventory -
+        <foreach collection="orderDTOList" item="item" index="index" open="case goods_code" separator=" " close="end">
+            when #{item.goodsId} then #{item.goodsNumber}
+        </foreach>
+        where goods_code in
+        <foreach collection="orderDTOList" item="item" index="index" open="(" separator="," close=")">
+            #{item.goodsId}
+        </foreach>
+    </update>
+
+    <!-- 更新商品库存(修改) -->
+    <update id="updateInventory" parameterType="java.lang.String">
+        update t_sys_goods sg
+        left join t_order_detail sd on sg.goods_code = sd.goods_code
+        set
+            sg.inventory = sg.inventory + sd.goods_num,
+            sg.modify_by = #{userId},
+            sg.modify_time = now(),
+            sg.version = sg.version + 1
+        where sd.order_code = #{orderId}
+    </update>
+
+    <!-- 查询订单列表 -->
+    <resultMap id="listOrderMap" type="com.xzsd.app.order.entity.OrderVO">
+        <id column="order_code" property="orderId"/>
+        <result column="order_state" property="orderState"/>
+        <result column="order_money" property="orderMoney"/>
+        <result column="version" property="version"/>
+        <collection property="goodsList" ofType="com.xzsd.app.order.entity.GoodsInfo">
+            <id column="goods_code" property="goodsId"/>
+            <result column="goods_price" property="goodsPrice"/>
+            <result column="goods_num" property="goodsNumber"/>
+            <result column="goods_name" property="goodsName"/>
+            <result column="goods_image" property="goodsUrl"/>
+        </collection>
+    </resultMap>
+
+    <select id="listOrderByPage" resultMap="listOrderMap">
+        select
+            so.order_code,
+            so.order_state,
+            so.order_money,
+            so.version,
+            sd.goods_code,
+            sd.goods_price,
+            sd.goods_num,
+            sg.goods_name,
+            sg.goods_image
+        from t_sys_order so
+        left join t_order_detail sd on so.order_code = sd.order_code
+        left join t_sys_goods sg on sd.goods_code = sg.goods_code
+        where so.is_deleted = 0
+        and so.buyer_code = #{userId}
+        order by so.create_time desc,
+            sd.goods_code desc
+    </select>
+
+    <!-- 查询订单详情 -->
+    <resultMap id="findOrderMap" type="com.xzsd.app.order.entity.OrderVO">
+        <id column="order_code" property="orderId"/>
+        <result column="order_state" property="orderState"/>
+        <result column="order_money" property="orderMoney"/>
+        <result column="store_name" property="storeName"/>
+        <result column="store_address" property="storeAddress"/>
+        <result column="create_time" property="createTime"/>
+        <result column="version" property="version"/>
+        <collection property="goodsList" ofType="com.xzsd.app.order.entity.GoodsInfo">
+            <id column="goods_code" property="goodsId"/>
+            <result column="goods_price" property="goodsPrice"/>
+            <result column="goods_num" property="goodsNumber"/>
+            <result column="goods_name" property="goodsName"/>
+            <result column="goods_image" property="goodsUrl"/>
+        </collection>
+    </resultMap>
+    
+    <select id="findOrderById" parameterType="java.lang.String" resultMap="findOrderMap">
+        select
+            so.order_code,
+            so.order_state,
+            so.order_money,
+            so.version,
+            ss.store_name,
+            (sp.dic_name+sc.dic_name+sy.dic_name+ss.store_address) store_address,
+            DATE_FORMAT(so.create_time,'%Y-%m-%d %H:%i:%s') create_time,
+            sd.goods_code,
+            sd.goods_price,
+            sd.goods_num,
+            sg.goods_name,
+            sg.goods_image
+        from t_sys_order so
+        left join t_order_detail sd on sd.order_code = so.order_code
+        left join t_sys_store ss on ss.store_code = so.store_code
+        left join t_sys_goods sg on sg.goods_code = sd.goods_code
+        left join t_sys_dictionary sp on sp.dic_code = ss.province_code
+        left join t_sys_dictionary sc on sc.dic_code = ss.city_code
+        left join t_sys_dictionary sy on sy.dic_code = ss.county_code
+        where so.is_deleted = 0
+        and so.order_code = #{orderId}
+        order by sd.goods_code desc
+    </select>
+
+    <!-- 修改订单状态 -->
+    <update id="updateOrderState" parameterType="com.xzsd.app.order.entity.OrderDO">
+        update t_sys_order
+        set
+        <if test='orderState == "2"'>
+            order_state =
+            case order_state
+                when 0 then 2
+                when 1 then 3
+            end,
+        </if>
+        <if test='orderState == "4"'>
+            order_state = 4,
+        </if>
+        <if test='orderState == "5"'>
+            order_state = 5,
+        </if>
+            modify_by = #{modifyBy},
+            modify_time = now(),
+            version = version + 1
+        where
+            order_code = #{orderId}
+        and version = #{version}
+    </update>
+
+    <!-- 查询订单评价页商品列表 -->
+    <select id="listGoodsForEvaluate" parameterType="java.lang.String" resultType="com.xzsd.app.order.entity.GoodsInfo">
+        select
+            td.goods_code goodsId,
+            td.goods_num  goodsNumber,
+            tg.goods_name goodsName,
+            tg.goods_image goodsUrl
+        from t_sys_order so
+        left join t_order_detail td on so.order_code = td.order_code
+        left join t_sys_goods tg on td.goods_code = tg.goods_code
+        where so.order_code = #{orderId}
+    </select>
+
+    <!-- 新增评价表 -->
+    <insert id="addEvaluate" parameterType="com.xzsd.app.order.entity.EvaluateInfo">
+        insert into t_goods_evaluate
+            (evaluate_code,
+             user_code,
+             order_code,
+             goods_code,
+             star_level,
+             evaluate_text,
+             is_deleted,
+             create_by,
+             create_time,
+             modify_by,
+             modify_time,
+             version)
+        values
+            <foreach collection="evaluateList" item="item" index="index" separator=",">
+                (#{item.evaluateId},
+                 #{item.userId},
+                 #{item.orderId},
+                 #{item.goodsId},
+                 #{item.starLevel},
+                 #{item.evaluateText},
+                 0,
+                 #{item.userId},
+                 now(),
+                 #{item.userId},
+                 now(),
+                 0)
+            </foreach>
+    </insert>
+
+    <!-- 新增评价图片 -->
+    <insert id="addEvaluateImage" parameterType="com.xzsd.app.order.entity.EvaluateInfo">
+        insert into t_evaluate_image
+            (image_code,
+             image_url,
+             image_no,
+             evaluate_code,
+             is_deleted,
+             create_by,
+             create_time,
+             modify_by,
+             modify_time,
+             version)
+        values
+        <foreach collection="evaluateList" item="item" index="index" separator=",">
+            <foreach collection="item.imageList" item="image_item" index="image_index" separator=",">
+                (#{image_item.imageId},
+                 #{image_item.imageUrl},
+                 #{image_item.imageNO},
+                 #{item.evaluateId},
+                 0,
+                 #{item.userId},
+                 now(),
+                 #{item.userId},
+                 now(),
+                 0)
+            </foreach>
+        </foreach>
+    </insert>
+</mapper>

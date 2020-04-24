@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xzsd.app.customer.dao.CustomerDao">
+
+    <!--统计用户账号数-->
+    <select id="countUserAcct" parameterType="com.xzsd.app.customer.entity.CustomerDO" resultType="int">
+        select count(user_acct)
+        from t_sys_user
+        where is_deleted = 0
+        and user_acct = #{userAcct}
+    </select>
+
+    <!-- 查询邀请码是否存在 -->
+    <select id="countInviteCode" parameterType="java.lang.String" resultType="int">
+        select count(store_code)
+        from t_sys_store
+        where invite_code = #{inviteCode}
+        and is_deleted = 0
+    </select>
+
+    <!-- 注册（新增用户信息） -->
+    <insert id="addUser" parameterType="com.xzsd.app.customer.entity.CustomerDO">
+        insert into t_sys_user
+            (user_code,
+             user_name,
+             user_acct,
+             user_pwd,
+             user_image_url,
+             id_card,
+             sex,
+             phone,
+             email,
+             role,
+             is_deleted,
+             create_time,
+             create_by,
+             modify_time,
+             modify_by,
+             version)
+        values
+           (#{userId},
+            #{userName},
+            #{userAcct},
+            #{userPwd},
+            #{userImage},
+            #{idCard},
+            #{sex},
+            #{phone},
+            #{email},
+            4,
+            #{isDeleted},
+            now(),
+            #{createBy},
+            now(),
+            #{ModifyBy},
+            0)
+    </insert>
+    <!-- 保存客户表信息 -->
+    <insert id="addCustomer" parameterType="com.xzsd.app.customer.entity.CustomerDO">
+        insert into t_sys_customer
+            (customer_code,
+             user_code,
+             invite_code,
+             is_deleted,
+             create_time,
+             create_by,
+             modify_time,
+             modify_by,
+             version)
+        values
+            (#{customerId},
+             #{userId},
+             #{inviteCode},
+             #{isDeleted},
+             now(),
+             #{createBy},
+             now(),
+             #{ModifyBy},
+             0)
+    </insert>
+    
+    <!-- 查询客户绑定门店信息 -->
+    <select id="findCustomerById" parameterType="java.lang.String" resultType="com.xzsd.app.customer.entity.CustomerVO">
+        select
+            ts.store_code storeId,
+            ts.store_name storeName
+        from t_sys_customer tc
+        left join t_sys_store ts on tc.invite_code = ts.invite_code
+        where tc.user_code = #{userId}
+        and tc.is_deleted = 0
+        and ts.is_deleted = 0
+    </select>
+
+    <!-- 修改客户邀请码 -->
+    <update id="updateInvite" parameterType="java.lang.String">
+        update t_sys_customer
+        set invite_code = #{inviteCode},
+            modify_by = #{userId},
+            modify_time = now(),
+            version = version+1
+        where user_code = #{userId}
+        and is_deleted = 0
+    </update>
+</mapper>

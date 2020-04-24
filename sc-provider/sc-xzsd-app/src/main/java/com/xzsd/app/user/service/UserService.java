@@ -60,7 +60,7 @@ public class UserService {
         //用户密码加密处理
         String newPwd = PasswordUtils.generatePassword(userDO.getNewPassword());
         userDO.setNewPassword(newPwd);
-        //修改用户信息
+        //修改用户密码
         int count = userDao.updatePassword(userDO);
         if(0 == count) {
             appResponse = AppResponse.versionError("数据有变化，请刷新！");

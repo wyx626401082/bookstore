@@ -25,4 +25,8 @@ public class GlobalClass {
      * 角色编号，客户
      */
     public static int customer = 4;
+    /**
+     * 订单状态
+     */
+    public static String cancelOrder = "5";
 }
