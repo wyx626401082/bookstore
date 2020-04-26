@@ -19,6 +19,10 @@ public class UserVO {
      */
     private String userImage;
     /**
+     * 用户电话号码
+     */
+    private String userPhone;
+    /**
      * 角色编号
      */
     private int role;
@@ -49,6 +53,14 @@ public class UserVO {
 
     public void setUserImage(String userImage) {
         this.userImage = userImage;
+    }
+
+    public String getUserPhone() {
+        return userPhone;
+    }
+
+    public void setUserPhone(String userPhone) {
+        this.userPhone = userPhone;
     }
 
     public int getRole() {

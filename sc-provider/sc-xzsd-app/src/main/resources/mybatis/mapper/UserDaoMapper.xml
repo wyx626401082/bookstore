@@ -7,6 +7,7 @@
             user_code userId,
             user_name userName,
             user_image_url userImage,
+            phone userPhone,
             role,
             version
         from t_sys_user

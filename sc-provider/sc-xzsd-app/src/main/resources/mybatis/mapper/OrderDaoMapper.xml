@@ -107,6 +107,40 @@
         where sd.order_code = #{orderId}
     </update>
 
+    <!-- 更新商品评价星级 -->
+    <update id="updateGoodsStarLevel" parameterType="java.lang.String">
+        UPDATE t_sys_goods sg
+        SET sg.star_level = (
+            SELECT
+                round( avg( ge.star_level ), 0 )
+            FROM
+                t_goods_evaluate ge
+            WHERE
+                ge.is_deleted = 0
+                AND ge.goods_code = sg.goods_code
+            ),
+            sg.modify_by = #{userId},
+            sg.modify_time = now(),
+            sg.version = sg.version + 1
+        WHERE sg.goods_code IN
+        <foreach item="item" index="index" collection="listId" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <!-- 删除购物车 -->
+    <update id="deleteShoppingCart" parameterType="java.lang.String">
+        update t_shopping_cart
+        set is_deleted = 1,
+        modify_by = #{userId},
+        modify_time = now(),
+        version = version + 1
+        where cart_code in
+        <foreach item="item" index="index" collection="listId" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
     <!-- 查询订单列表 -->
     <resultMap id="listOrderMap" type="com.xzsd.app.order.entity.OrderVO">
         <id column="order_code" property="orderId"/>
@@ -167,7 +201,7 @@
             so.order_money,
             so.version,
             ss.store_name,
-            (sp.dic_name+sc.dic_name+sy.dic_name+ss.store_address) store_address,
+            concat_ws('',sp.dic_name,sc.dic_name,sy.dic_name,ss.store_address) store_address,
             DATE_FORMAT(so.create_time,'%Y-%m-%d %H:%i:%s') create_time,
             sd.goods_code,
             sd.goods_price,
@@ -195,6 +229,7 @@
             case order_state
                 when 0 then 2
                 when 1 then 3
+            else order_state
             end,
         </if>
         <if test='orderState == "4"'>
@@ -209,6 +244,9 @@
         where
             order_code = #{orderId}
         and version = #{version}
+        <if test='orderState == "5"'>
+            and order_state &lt;&gt; 5
+        </if>
     </update>
 
     <!-- 查询订单评价页商品列表 -->

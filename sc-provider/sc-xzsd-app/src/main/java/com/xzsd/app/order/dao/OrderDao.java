@@ -49,6 +49,22 @@ public interface OrderDao {
     int updateInventory(@Param("orderId") String orderId, @Param("userId") String userId);
 
     /**
+     * 更新商品评价星级
+     * @param listId 商品编号集合
+     * @param userId 当前用户编号
+     * @return
+     */
+    int updateGoodsStarLevel(@Param("listId") List<String> listId, @Param("userId") String userId);
+
+    /**
+     * 删除购物车
+     * @param listId 购物车编号
+     * @param userId 当前用户编号
+     * @return
+     */
+    int deleteShoppingCart(@Param("listId") List<String> listId, @Param("userId") String userId);
+
+    /**
      * 查询订单列表（分页）
      * @param orderDO 查询信息
      * @return

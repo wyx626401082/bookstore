@@ -10,10 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 import static com.neusoft.core.page.PageUtils.getPageInfo;
 
@@ -47,7 +44,7 @@ public class OrderService {
         for(int i = 0; i < num; i++) {
             int goodsNum = Integer.valueOf(listGoodsNum.get(i));
             if(goodsNum < goodsInfoList.get(i).getGoodsNumber()) {
-                return AppResponse.paramError("\""+goodsInfoList.get(i).getGoodsName()+"\""+" 库存不足，请重新选择商品数量！");
+                return AppResponse.paramError("《"+goodsInfoList.get(i).getGoodsName()+"》"+" 库存不足，请重新选择商品数量！");
             }
         }
         //计算订单总价
@@ -95,6 +92,23 @@ public class OrderService {
         int countInventory = orderDao.updateGoodsInventory(orderDTOList,orderDO.getUserId());
         if(0 == countInventory) {
             return AppResponse.bizError("更新商品库存失败！");
+        }
+        //购物车编号List去重
+        List<String> newListCart = new ArrayList<>(num);
+        newListCart.addAll(new HashSet<>(listCart));
+        //购物车编号List去0
+        List<String> listId = new ArrayList<>();
+        for(int i = 0; i < newListCart.size(); i++) {
+            if(!"0".equals(newListCart.get(i))){
+                listId.add(newListCart.get(i));
+            }
+        }
+        //判断是否存在购物车需要删除
+        if(0 != listId.size()) {
+            int countDeleted = orderDao.deleteShoppingCart(listId,orderDO.getUserId());
+            if (0 == countDeleted) {
+                return AppResponse.bizError("删除购物车失败！");
+            }
         }
         return AppResponse.success("新增订单成功！");
     }
@@ -197,6 +211,7 @@ public class OrderService {
         String userId = evaluateDO.getUserId();
         String orderId = evaluateDO.getOrderId();
         int num = evaluateDO.getEvaluateList().size();
+        List<String> goodsIdList = new ArrayList<>();
         for(int i = 0; i < num; i++) {
             //新建评价表编号
             String evaluateId = StringUtil.getCommonCode(2);
@@ -204,6 +219,8 @@ public class OrderService {
             evaluateDO.getEvaluateList().get(i).setEvaluateId(evaluateId);
             evaluateDO.getEvaluateList().get(i).setUserId(userId);
             evaluateDO.getEvaluateList().get(i).setOrderId(orderId);
+            //保存商品编号，用于更新商品评分
+            goodsIdList.add(evaluateDO.getEvaluateList().get(i).getGoodsId());
             //保存图片编号到list
             int numImage = evaluateDO.getEvaluateList().get(i).getImageList().size();
             for(int j = 0; j < numImage; j++) {
@@ -220,6 +237,11 @@ public class OrderService {
         int countImage = orderDao.addEvaluateImage(evaluateDO.getEvaluateList());
         if(0 == countImage) {
             return AppResponse.bizError("保存评价图片失败，请重试！");
+        }
+        //更新商品评价星级
+        int countUpdate = orderDao.updateGoodsStarLevel(goodsIdList,evaluateDO.getUserId());
+        if(num != countUpdate) {
+            return AppResponse.bizError("商品评价星级更新失败，请重试！");
         }
         return AppResponse.success("新增订单商品评价成功！");
     }
