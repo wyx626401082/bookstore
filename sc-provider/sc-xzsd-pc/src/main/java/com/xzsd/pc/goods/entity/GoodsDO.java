@@ -81,6 +81,10 @@ public class GoodsDO {
      */
     private int goodsState;
     /**
+     * 商品状态（0未发布 1上架 2下架 ）
+     */
+    private String state;
+    /**
      * 上架时间
      */
     private Date putawayTime;
@@ -203,6 +207,14 @@ public class GoodsDO {
 
     public void setGoodsState(int goodsState) {
         this.goodsState = goodsState;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
     }
 
     public String getBookId() {

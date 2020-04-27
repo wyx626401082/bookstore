@@ -121,6 +121,9 @@ public class BannerService {
      * @date 2020-04-14
      */
     public AppResponse listBanner(BannerDO bannerDO) {
+        if(!"".equals(bannerDO.getState()) && null != bannerDO.getState()) {
+            bannerDO.setBannerState(Integer.valueOf(bannerDO.getState()));
+        }
         List<BannerVO> bannerVOList = bannerDao.listBannerByPage(bannerDO);
         return AppResponse.success("查询轮播图列表成功！", getPageInfo(bannerVOList));
     }

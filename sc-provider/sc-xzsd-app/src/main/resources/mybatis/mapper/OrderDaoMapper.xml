@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.xzsd.app.order.dao.OrderDao">
 
-    <!-- 查询商品数量及名称 -->
+    <!-- 查询商品库存及名称 -->
     <select id="countGoodsNumber" resultType="com.xzsd.app.order.entity.GoodsInfo">
         select
             goods_name goodsName,
@@ -12,6 +12,14 @@
         <foreach item="item" index="index" collection="listId" open="(" separator="," close=")">
             #{item}
         </foreach>
+    </select>
+
+    <!-- 查询订单中商品数量 -->
+    <select id="countOrderGoods" resultType="int">
+        select
+        count(goods_code)
+        from t_order_detail
+        where order_code = #{orderId}
     </select>
 
     <!-- 新增订单（主表） -->

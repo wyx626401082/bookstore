@@ -21,13 +21,13 @@ public class ClassifyVO {
      */
     private String remark;
     /**
-     * 分类集合
-     */
-    private List<ClassifyVO> classTwoList;
-    /**
      * 版本号
      */
     private String version;
+    /**
+     * 分类集合
+     */
+    private List<ClassifyVO> classTwoList;
 
     public String getClassId() {
         return classId;

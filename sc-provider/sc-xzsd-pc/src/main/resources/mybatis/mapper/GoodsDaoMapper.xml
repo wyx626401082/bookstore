@@ -254,7 +254,7 @@
         <if test="goodsName != null and goodsName != ''">
             and tg.goods_name like concat('%', #{goodsName}, '%')
         </if>
-        <if test="goodsState != null and goodsState != ''">
+        <if test="state != null and state != ''">
             and tg.state = #{goodsState}
         </if>
         <if test="advertise != null and advertise != ''">

@@ -32,7 +32,7 @@
         </collection>
     </resultMap>
 
-    <select id="listGoodsEvaluateByPage" resultMap="listEvaluateMap">
+    <select id="listGoodsEvaluateByPage" parameterType="com.xzsd.app.goods.entity.GoodsDO" resultMap="listEvaluateMap">
         select
             te.evaluate_code,
             te.star_level,
@@ -45,13 +45,13 @@
         left join t_sys_user tu on te.user_code = tu.user_code
         where te.is_deleted = 0
         and te.goods_code = #{goodsId}
-        <if test="evaluateType == 5">
+        <if test='evaluateType == "5"'>
             and te.star_level &gt; 3
         </if>
-        <if test="evaluateType == 3">
+        <if test='evaluateType == "3"'>
             and te.star_level = 3
         </if>
-        <if test="evaluateType == 1">
+        <if test='evaluateType == "1"'>
             and te.star_level &lt; 3
         </if>
         order by te.create_time desc,

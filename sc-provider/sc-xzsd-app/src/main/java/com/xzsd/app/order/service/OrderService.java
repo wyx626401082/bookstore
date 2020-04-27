@@ -178,8 +178,11 @@ public class OrderService {
         }
         //取消订单时更新商品库存
         if(GlobalClass.cancelOrder.equals(orderDO.getOrderState())){
+            //查询订单中商品数量
+            int countOrderGoods = orderDao.countOrderGoods(orderDO.getOrderId());
+            //更新商品库存
             int countUpdate = orderDao.updateInventory(orderDO.getOrderId(),orderDO.getUserId());
-            if(0 == countUpdate) {
+            if(countOrderGoods != countUpdate) {
                 return AppResponse.bizError("更新商品库存失败！");
             }
         }

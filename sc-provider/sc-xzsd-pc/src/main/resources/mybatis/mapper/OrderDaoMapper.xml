@@ -12,6 +12,17 @@
         </foreach>
     </select>
 
+    <!-- 查询订单中商品数量 -->
+    <select id="countOrderGoods" resultType="int">
+        select
+            count(goods_code)
+        from t_order_detail
+        where order_code in
+        <foreach item="item" index="index" collection="listId" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
     <!-- 修改订单信息 -->
     <update id="updateOrderById" parameterType="com.xzsd.pc.order.entity.OrderDO">
         update t_sys_order
@@ -41,6 +52,21 @@
         and version =
         <foreach collection="versionMap" item="item" index="key" open="case order_code" separator=" " close="end">
             when #{key} then #{item}
+        </foreach>
+    </update>
+
+    <!-- 更新商品库存(修改) -->
+    <update id="updateInventory" parameterType="java.lang.String">
+        update t_sys_goods sg
+        left join t_order_detail sd on sg.goods_code = sd.goods_code
+        set
+            sg.inventory = sg.inventory + sd.goods_num,
+            sg.modify_by = #{userId},
+            sg.modify_time = now(),
+            sg.version = sg.version + 1
+        where sd.order_code in
+        <foreach item="item" index="index" collection="listId" open="(" separator="," close=")">
+            #{item}
         </foreach>
     </update>
 

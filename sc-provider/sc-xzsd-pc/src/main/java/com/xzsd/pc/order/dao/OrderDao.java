@@ -21,6 +21,13 @@ public interface OrderDao {
     List<Integer> countOrderState(@Param("listId") List<String> listId);
 
     /**
+     * 查询订单中商品数量
+     * @param listId 订单编号
+     * @return
+     */
+    int countOrderGoods(@Param("listId") List<String> listId);
+
+    /**
      * 修改订单状态
      * @param orderState 订单状态
      * @param versionMap 订单编号->版本号map
@@ -28,6 +35,14 @@ public interface OrderDao {
      * @return
      */
     int updateOrderById(@Param("orderState") int orderState, @Param("versionMap") Map<String,Integer> versionMap, @Param("userId") String userId);
+
+    /**
+     * 更新商品库存
+     * @param listId 订单编号
+     * @param userId 当前用户编号
+     * @return
+     */
+    int updateInventory(@Param("listId") List<String> listId, @Param("userId") String userId);
 
     /**
      * 查询订单列表

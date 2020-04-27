@@ -163,6 +163,10 @@ public class GoodsService {
      * @Date 2020-03-30
      */
     public AppResponse listGoods(GoodsDO goodsDO) {
+        //若输入商品状态，则转化数据类型
+        if(!"".equals(goodsDO.getState()) && null != goodsDO.getState()) {
+            goodsDO.setGoodsState(Integer.valueOf(goodsDO.getState()));
+        }
         List<GoodsVO> goodsVOList = goodsDao.listGoodsByPage(goodsDO);
         return AppResponse.success("查询商品列表成功！", getPageInfo(goodsVOList));
     }

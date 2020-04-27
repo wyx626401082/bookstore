@@ -39,12 +39,19 @@ public class OrderService {
      */
     @Transactional(rollbackFor = Exception.class)
     public AppResponse updateOrderById(String orderId, int orderState, String version, String userId) {
-        AppResponse appResponse = AppResponse.success("修改订单状态成功");
+        AppResponse appResponse = AppResponse.success("修改订单状态成功！");
         //将订单id，以及与其对应版本号转化为List
         List<String> listId = Arrays.asList(orderId.split(","));
         List<String> listVersion = Arrays.asList(version.split(","));
-        int num = listId.size();
+        //验证订单是否已被取消
+        List<Integer> stateList = orderDao.countOrderState(listId);
+        for( int i = 0 ; i < stateList.size(); i++ ) {
+            if(GlobalClass.beCancelled == stateList.get(i)){
+                return AppResponse.paramError("存在已取消订单，请重新选择！");
+            }
+        }
         //以订单id为key，版本号为value存入Map
+        int num = listId.size();
         Map versionMap = new HashMap<String,Integer>(num);
         for(int i = 0; i < num; i++) {
             int intVersion = Integer.valueOf(listVersion.get(i));
@@ -53,20 +60,18 @@ public class OrderService {
         //订单取消到货状态验证
         if(GlobalClass.cancelArrived == orderState){
             //验证订单是否为到货状态
-            List<Integer> statList = orderDao.countOrderState(listId);
-            for( int i = 0 ; i < statList.size(); i++ ) {
-                if(GlobalClass.haveArrived != statList.get(i)){
-                    return AppResponse.paramError("存在订单不是到货状态");
+            for( int i = 0 ; i < stateList.size(); i++ ) {
+                if(GlobalClass.haveArrived != stateList.get(i)){
+                    return AppResponse.paramError("存在订单不是到货状态！");
                 }
             }
         }
         //订单取消已取货状态验证
         if(GlobalClass.cancelPickup == orderState){
             //验证订单是否为已取货状态
-            List<Integer> statList = orderDao.countOrderState(listId);
-            for( int i = 0 ; i < statList.size(); i++ ) {
-                if(GlobalClass.bePickup != statList.get(i)){
-                    return AppResponse.paramError("存在订单不是已取货状态");
+            for( int i = 0 ; i < stateList.size(); i++ ) {
+                if(GlobalClass.bePickup != stateList.get(i)){
+                    return AppResponse.paramError("存在订单不是已取货状态！");
                 }
             }
         }
@@ -75,6 +80,16 @@ public class OrderService {
         if(num > count) {
             appResponse = AppResponse.versionError("数据有变化，请刷新！");
             return appResponse;
+        }
+        //取消订单时更新商品库存
+        if(GlobalClass.cancelOrder == orderState) {
+            //查询订单中商品数量
+            int countOrderGoods = orderDao.countOrderGoods(listId);
+            //更新商品库存
+            int countUpdate = orderDao.updateInventory(listId,userId);
+            if(countOrderGoods != countUpdate) {
+                return AppResponse.bizError("更新商品库存失败！");
+            }
         }
         return appResponse;
     }
@@ -123,6 +138,6 @@ public class OrderService {
             String totalPrice = price.multiply(num).toString();
             orderVOList.get(i).setTotalPrice(totalPrice);
         }
-        return AppResponse.success("查询订单详情成功", orderVOList);
+        return AppResponse.success("查询订单详情成功！", orderVOList);
     }
 }

@@ -78,7 +78,7 @@
         <result property="remark" column="remark"/>
         <result property="version" column="version"/>
         <collection property="classTwoList" ofType="com.xzsd.pc.classify.entity.ClassifyVO" >
-            <id column="class_code" property="classId"/>
+            <id column="c_class_code" property="classId"/>
             <result property="className" column="c_className"/>
             <result property="remark" column="c_remark"/>
             <result property="version" column="c_version"/>
@@ -87,9 +87,11 @@
 
     <select id="listClassify" resultMap="classifyResultMap">
         select
+            cf.class_code,
             cf.class_name,
             cf.remark,
             cf.version,
+            cc.class_code c_class_code,
             cc.class_name c_className,
             cc.remark c_remark,
             cc.version c_version

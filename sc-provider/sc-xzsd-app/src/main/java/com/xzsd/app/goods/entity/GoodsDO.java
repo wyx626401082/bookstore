@@ -21,7 +21,7 @@ public class GoodsDO {
     /**
      *评价类型：5好评，3中评，1差评
      */
-    private int evaluateType;
+    private String evaluateType;
 
     public int getPageSize() {
         return pageSize;
@@ -47,11 +47,11 @@ public class GoodsDO {
         this.goodsId = goodsId;
     }
 
-    public int getEvaluateType() {
+    public String getEvaluateType() {
         return evaluateType;
     }
 
-    public void setEvaluateType(int evaluateType) {
+    public void setEvaluateType(String evaluateType) {
         this.evaluateType = evaluateType;
     }
 }

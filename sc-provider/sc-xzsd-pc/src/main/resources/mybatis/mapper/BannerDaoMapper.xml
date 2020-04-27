@@ -140,7 +140,7 @@
             version
         from t_sys_banner
         where is_deleted = 0
-        <if test="bannerState != null and bannerState != ''">
+        <if test="state != null and state != ''">
             and state = #{bannerState}
         </if>
         order by banner_no asc

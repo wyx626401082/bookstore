@@ -33,6 +33,10 @@ public class BannerDO {
      */
     private int bannerState;
     /**
+     * 轮播图状态 0禁用，1启用
+     */
+    private String state;
+    /**
      * 选中的商品编号
      */
     private String goodsId;
@@ -119,6 +123,14 @@ public class BannerDO {
 
     public void setBannerState(int bannerState) {
         this.bannerState = bannerState;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
     }
 
     public String getGoodsId() {

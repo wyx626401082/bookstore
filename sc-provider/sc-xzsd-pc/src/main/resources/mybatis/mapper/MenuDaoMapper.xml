@@ -88,7 +88,7 @@
             <if test="role == 2">
                 and access_level = 2
             </if>
-            order by create_time desc
+            order by create_time asc
     </select>
 
     <!-- 查询菜单详情 -->

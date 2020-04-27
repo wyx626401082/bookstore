@@ -12,13 +12,6 @@ import java.util.List;
  */
 public interface OrderDao {
     /**
-     * 查询商品数量及名称
-     * @param listId 商品编号
-     * @return
-     */
-    List<GoodsInfo> countGoodsNumber(@Param("listId") List<String> listId);
-
-    /**
      * 新增订单（主表）
      * @param orderDO 订单信息
      * @return
@@ -63,6 +56,20 @@ public interface OrderDao {
      * @return
      */
     int deleteShoppingCart(@Param("listId") List<String> listId, @Param("userId") String userId);
+
+    /**
+     * 查询商品库存及名称
+     * @param listId 商品编号
+     * @return
+     */
+    List<GoodsInfo> countGoodsNumber(@Param("listId") List<String> listId);
+
+    /**
+     * 查询订单中商品数量
+     * @param orderId 订单编号
+     * @return
+     */
+    int countOrderGoods(@Param("orderId") String orderId);
 
     /**
      * 查询订单列表（分页）
