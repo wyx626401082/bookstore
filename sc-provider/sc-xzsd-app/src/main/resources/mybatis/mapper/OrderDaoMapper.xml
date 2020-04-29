@@ -86,17 +86,19 @@
              </foreach>
     </insert>
 
-    <!-- 更新商品库存(新增) -->
+    <!-- 更新商品库存、浏览量(新增) -->
     <update id="updateGoodsInventory">
         update t_sys_goods
         set
+            goods_views = goods_views + 1,
             modify_by = #{userId},
             modify_time = now(),
             version = version + 1,
             inventory = inventory -
-        <foreach collection="orderDTOList" item="item" index="index" open="case goods_code" separator=" " close="end">
+        <foreach collection="orderDTOList" item="item" index="index" open="case goods_code" separator=" " close="end,">
             when #{item.goodsId} then #{item.goodsNumber}
         </foreach>
+            state = case inventory when 0 then 3
         where goods_code in
         <foreach collection="orderDTOList" item="item" index="index" open="(" separator="," close=")">
             #{item.goodsId}
@@ -109,6 +111,18 @@
         left join t_order_detail sd on sg.goods_code = sd.goods_code
         set
             sg.inventory = sg.inventory + sd.goods_num,
+            sg.modify_by = #{userId},
+            sg.modify_time = now(),
+            sg.version = sg.version + 1
+        where sd.order_code = #{orderId}
+    </update>
+
+    <!-- 更新商品库存(修改) -->
+    <update id="updateSalesNum" parameterType="java.lang.String">
+        update t_sys_goods sg
+        left join t_order_detail sd on sg.goods_code = sd.goods_code
+        set
+            sg.sales_num = sg.sales_num + sd.goods_num,
             sg.modify_by = #{userId},
             sg.modify_time = now(),
             sg.version = sg.version + 1
@@ -180,6 +194,18 @@
         left join t_sys_goods sg on sd.goods_code = sg.goods_code
         where so.is_deleted = 0
         and so.buyer_code = #{userId}
+        <if test='orderState == "0"'>
+            and so.order_state = 0
+        </if>
+        <if test='orderState == "1"'>
+            and so.order_state = 1
+        </if>
+        <if test='orderState == "2"'>
+            and so.order_state = 2
+        </if>
+        <if test='orderState == "3"'>
+            and ( so.order_state = 3 or so.order_state = 4 )
+        </if>
         order by so.create_time desc,
             sd.goods_code desc
     </select>

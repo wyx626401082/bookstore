@@ -9,6 +9,8 @@
             book_code bookId,
             goods_image goodsUrl,
             goods_price goodsPrice,
+            sales_num goodsSales,
+            goods_views goodsViews,
             inventory,
             advertise,
             introduce,

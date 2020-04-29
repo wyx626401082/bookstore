@@ -78,7 +78,7 @@ public class CustomerService {
         CustomerVO customerVO = null;
         customerVO = customerDao.findCustomerById(userId);
         if (customerVO == null) {
-            return AppResponse.success("无客户绑定门店信息查询结果！");
+            return AppResponse.paramError("无客户绑定门店信息查询结果！");
         }
         return AppResponse.success("客户绑定门店信息信息查询成功！", customerVO);
     }

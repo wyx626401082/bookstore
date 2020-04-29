@@ -26,7 +26,15 @@ public class GlobalClass {
      */
     public static int customer = 4;
     /**
-     * 订单状态
+     * 取消订单
      */
     public static String cancelOrder = "5";
+    /**
+     * 已到货
+     */
+    public static String haveArrived = "1";
+    /**
+     * 已取货
+     */
+    public static String bePickup = "2";
 }

@@ -31,6 +31,14 @@ public class GoodsVO {
      */
     private String inventory;
     /**
+     * 商品销售量
+     */
+    private String goodsSales;
+    /**
+     * 商品浏览量
+     */
+    private String goodsViews;
+    /**
      * 广告词
      */
     private String advertise;
@@ -93,6 +101,22 @@ public class GoodsVO {
 
     public void setInventory(String inventory) {
         this.inventory = inventory;
+    }
+
+    public String getGoodsSales() {
+        return goodsSales;
+    }
+
+    public void setGoodsSales(String goodsSales) {
+        this.goodsSales = goodsSales;
+    }
+
+    public String getGoodsViews() {
+        return goodsViews;
+    }
+
+    public void setGoodsViews(String goodsViews) {
+        this.goodsViews = goodsViews;
     }
 
     public String getAdvertise() {

@@ -88,7 +88,7 @@ public class OrderService {
         if(num > countDetail) {
             return AppResponse.bizError("新增订单明细表失败，请重试！");
         }
-        //更新商品库存
+        //更新商品库存、商品浏览量
         int countInventory = orderDao.updateGoodsInventory(orderDTOList,orderDO.getUserId());
         if(0 == countInventory) {
             return AppResponse.bizError("更新商品库存失败！");
@@ -177,13 +177,23 @@ public class OrderService {
             return appResponse;
         }
         //取消订单时更新商品库存
-        if(GlobalClass.cancelOrder.equals(orderDO.getOrderState())){
+        if(GlobalClass.cancelOrder.equals(orderDO.getOrderState())) {
             //查询订单中商品数量
             int countOrderGoods = orderDao.countOrderGoods(orderDO.getOrderId());
             //更新商品库存
             int countUpdate = orderDao.updateInventory(orderDO.getOrderId(),orderDO.getUserId());
             if(countOrderGoods != countUpdate) {
                 return AppResponse.bizError("更新商品库存失败！");
+            }
+        }
+        //确认收货时更新商品销售量
+        if(GlobalClass.bePickup.equals(orderDO.getOrderState())) {
+            //查询订单中商品数量
+            int countOrderGoods = orderDao.countOrderGoods(orderDO.getOrderId());
+            //更新商品销售量
+            int countUpdate = orderDao.updateSalesNum(orderDO.getOrderId(),orderDO.getUserId());
+            if(countOrderGoods != countUpdate) {
+                return AppResponse.bizError("更新商品销售量失败！");
             }
         }
         return appResponse;

@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xzsd.app.manager.dao.ManagerDao">
+
+    <!-- 查询店长订单列表(分页） -->
+    <resultMap id="listOrderMap" type="com.xzsd.app.manager.entity.OrderVO">
+        <id column="order_code" property="orderId"/>
+        <result column="order_state" property="orderState"/>
+        <result column="order_money" property="orderMoney"/>
+        <result column="user_name" property="customerName"/>
+        <result column="phone" property="customerPhone"/>
+        <result column="version" property="version"/>
+        <collection property="goodsList" ofType="com.xzsd.app.manager.entity.GoodsInfo">
+            <id column="goods_code" property="goodsId"/>
+            <result column="goods_price" property="goodsPrice"/>
+            <result column="goods_num" property="goodsNumber"/>
+            <result column="goods_image" property="goodsUrl"/>
+        </collection>
+    </resultMap>
+
+    <select id="listOrderByPage" parameterType="com.xzsd.app.manager.entity.ManagerDO" resultMap="listOrderMap">
+        select
+            so.order_code,
+            so.order_state,
+            so.order_money,
+            so.version,
+            su.user_name,
+            su.phone,
+            od.goods_code,
+            od.goods_price,
+            od.goods_num,
+            sg.goods_image
+        from t_sys_order so
+        left join t_sys_user su on su.user_code = so.buyer_code
+        left join t_sys_store ss on ss.store_code = so.store_code
+        left join t_order_detail od on od.order_code = so.order_code
+        left join t_sys_goods sg on sg.goods_code = od.goods_code
+        where
+            so.is_deleted = 0
+        and ss.user_code = #{userId}
+        <if test='orderState == "0"'>
+            and so.order_state = 0
+        </if>
+        <if test='orderState == "1"'>
+            and so.order_state = 1
+        </if>
+        <if test='orderState == "2"'>
+            and so.order_state = 2
+        </if>
+        <if test='orderState == "3"'>
+            and ( so.order_state = 3 or so.order_state = 4 )
+        </if>
+        order by so.create_time desc,
+            od.goods_code asc
+    </select>
+
+    <!-- 查询订单详情 -->
+    <resultMap id="findOrderMap" type="com.xzsd.app.manager.entity.OrderVO">
+        <id column="order_code" property="orderId"/>
+        <result column="order_state" property="orderState"/>
+        <result column="order_money" property="orderMoney"/>
+        <result column="user_name" property="customerName"/>
+        <result column="phone" property="customerPhone"/>
+        <result column="store_name" property="storeName"/>
+        <result column="store_address" property="storeAddress"/>
+        <result column="create_time" property="createTime"/>
+        <result column="version" property="version"/>
+        <collection property="goodsList" ofType="com.xzsd.app.manager.entity.GoodsInfo">
+            <id column="goods_code" property="goodsId"/>
+            <result column="goods_price" property="goodsPrice"/>
+            <result column="goods_num" property="goodsNumber"/>
+            <result column="goods_image" property="goodsUrl"/>
+        </collection>
+    </resultMap>
+
+    <select id="findOrderById" parameterType="java.lang.String" resultMap="findOrderMap">
+        select
+        so.order_code,
+        so.order_state,
+        so.order_money,
+        so.version,
+        su.user_name,
+        su.phone,
+        ss.store_name,
+        concat_ws('',sp.dic_name,sc.dic_name,sy.dic_name,ss.store_address) store_address,
+        DATE_FORMAT(so.create_time,'%Y-%m-%d %H:%i:%s') create_time,
+        od.goods_code,
+        od.goods_price,
+        od.goods_num,
+        sg.goods_image
+        from t_sys_order so
+        left join t_sys_user su on su.user_code = so.buyer_code
+        left join t_sys_store ss on ss.store_code = so.store_code
+        left join t_sys_dictionary sp on sp.dic_code = ss.province_code
+        left join t_sys_dictionary sc on sc.dic_code = ss.city_code
+        left join t_sys_dictionary sy on sy.dic_code = ss.county_code
+        left join t_order_detail od on od.order_code = so.order_code
+        left join t_sys_goods sg on sg.goods_code = od.goods_code
+        where
+            so.order_code = #{orderId}
+        order by od.goods_code asc
+    </select>
+
+    <!-- 查询店长负责门店信息 -->
+    <select id="findManager" parameterType="java.lang.String" resultType="com.xzsd.app.manager.entity.UserInfo">
+        select
+            ss.store_name storeName,
+            ss.invite_code inviteCode,
+            concat_ws('',sp.dic_name,sc.dic_name,sy.dic_name,ss.store_address) storeAddress
+        from t_sys_user su
+        left join t_sys_store ss on ss.user_code = su.user_code
+        left join t_sys_dictionary sp on sp.dic_code = ss.province_code
+        left join t_sys_dictionary sc on sc.dic_code = ss.city_code
+        left join t_sys_dictionary sy on sy.dic_code = ss.county_code
+        where su.user_code = #{userId}
+    </select>
+
+    <!-- 查询司机信息 -->
+    <select id="findDriver" parameterType="java.lang.String" resultType="com.xzsd.app.manager.entity.UserInfo">
+        select
+            tu.user_name driverName,
+            tu.phone driverPhone
+        from t_sys_store ss
+        left join t_sys_driver td on td.county_code = ss.county_code
+        left join t_sys_user tu on tu.user_code = td.user_code
+        where ss.is_deleted = 0
+        and tu.is_deleted = 0
+        and ss.user_code = #{userId}
+    </select>
+
+    <!-- 修改订单状态 -->
+    <update id="updateOrderState" parameterType="com.xzsd.app.manager.entity.ManagerDO">
+        update t_sys_order
+        set
+        <if test='orderState == "1"'>
+            order_state =
+            case order_state
+                when 0 then 1
+                when 2 then 3
+            else order_state
+            end,
+        </if>
+        <if test='orderState == "5"'>
+            order_state = 5,
+        </if>
+        modify_by = #{userId},
+        modify_time = now(),
+        version = version + 1
+        where
+        order_code = #{orderId}
+        and version = #{version}
+        <if test='orderState == "5"'>
+            and order_state &lt;&gt; 5
+        </if>
+    </update>
+
+    <!-- 更新商品库存 -->
+    <update id="updateInventory" parameterType="java.lang.String">
+        update t_sys_goods sg
+        left join t_order_detail sd on sg.goods_code = sd.goods_code
+        set
+            sg.inventory = sg.inventory + sd.goods_num,
+            sg.modify_by = #{userId},
+            sg.modify_time = now(),
+            sg.version = sg.version + 1
+        where sd.order_code = #{orderId}
+    </update>
+</mapper>
