@@ -17,9 +17,9 @@
         from t_sys_user tu
         left join t_sys_store ts on tu.user_code = ts.user_code
         where tu.user_code = #{userId}
-        and role = 2
-        and tu.is_deleted = 0
-        and ts.is_deleted = 0
+            and role = 2
+            and tu.is_deleted = 0
+            and ts.is_deleted = 0
         <if test='storeId != "0"' >
             and ts.store_code &lt;&gt; #{storeId}
         </if>
@@ -178,7 +178,8 @@
         left join t_sys_dictionary ty on ts.county_code = ty.dic_code
         where
             ts.is_deleted = 0
-        and ts.store_code = #{storeId}
+        and
+            ts.store_code = #{storeId}
     </select>
 
     <!-- 查询省市区 -->
@@ -191,5 +192,4 @@
         and dic_type = 'AreaName'
         and parent_code = #{areaId}
     </select>
-
 </mapper>

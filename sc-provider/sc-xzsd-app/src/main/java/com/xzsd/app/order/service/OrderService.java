@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 
 import static com.neusoft.core.page.PageUtils.getPageInfo;
@@ -52,12 +53,12 @@ public class OrderService {
         for(int i = 0; i < num; i++) {
             BigDecimal goodsNum = new BigDecimal(listGoodsNum.get(i));
             BigDecimal goodsPrice = new BigDecimal(listGoodsPrice.get(i));
-            orderMoney = goodsPrice.multiply(goodsNum).add(orderMoney);
+            orderMoney = goodsPrice.multiply(goodsNum).add(orderMoney).setScale(2, RoundingMode.HALF_UP);
         }
         String totalMoney = orderMoney.toString();
+        orderDO.setOrderMoney(totalMoney);
         //新生成订单编号
         String orderId = StringUtil.getCommonCode(2);
-        orderDO.setOrderMoney(totalMoney);
         orderDO.setOrderId(orderId);
         orderDO.setIsDeleted(0);
         //将订单信息保存到订单表（主表）
@@ -89,7 +90,7 @@ public class OrderService {
             return AppResponse.bizError("新增订单明细表失败，请重试！");
         }
         //更新商品库存、商品浏览量
-        int countInventory = orderDao.updateGoodsInventory(orderDTOList,orderDO.getUserId());
+        int countInventory = orderDao.updateInventoryAtAdd(orderDTOList,orderDO.getUserId());
         if(0 == countInventory) {
             return AppResponse.bizError("更新商品库存失败！");
         }
@@ -181,7 +182,7 @@ public class OrderService {
             //查询订单中商品数量
             int countOrderGoods = orderDao.countOrderGoods(orderDO.getOrderId());
             //更新商品库存
-            int countUpdate = orderDao.updateInventory(orderDO.getOrderId(),orderDO.getUserId());
+            int countUpdate = orderDao.updateInventoryAtModify(orderDO.getOrderId(),orderDO.getUserId());
             if(countOrderGoods != countUpdate) {
                 return AppResponse.bizError("更新商品库存失败！");
             }

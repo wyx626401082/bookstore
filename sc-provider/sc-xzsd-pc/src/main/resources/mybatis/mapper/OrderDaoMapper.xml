@@ -78,6 +78,7 @@
             so.order_state orderState,
             so.store_code storeId,
             so.buyer_code userId,
+            so.version,
             su.user_name userName,
             su.phone userPhone,
             DATE_FORMAT(so.pay_time,'%Y-%m-%d %H:%i:%s') payTime
@@ -94,18 +95,18 @@
             and su.user_name like concat('%', #{userName}, '%')
         </if>
         <if test="userPhone != null and userPhone != ''">
-            and su.phone = #{userPhone}
+            and su.phone like concat('%', #{userPhone}, '%')
         </if>
         <if test=" orderState != null and orderState != ''">
             and so.order_state = #{state}
         </if>
         <if test="orderId != null and orderId != ''">
-            and so.order_code = #{orderId}
+            and so.order_code like concat('%', #{orderId}, '%')
         </if>
-        <if test="payTimeStart != null and payTimeStart != '' and payTimeEnd == null and payTimeEnd == ''">
+        <if test="payTimeStart != null and payTimeStart != '' and (payTimeEnd == null or payTimeEnd == '')">
             and so.pay_time = #{payTimeStart}
         </if>
-        <if test="payTimeEnd != null and payTimeEnd != '' and payTimeStart == null and payTimeStart == ''">
+        <if test="payTimeEnd != null and payTimeEnd != '' and (payTimeStart == null or payTimeStart == '')">
             and so.pay_time = #{payTimeEnd}
         </if>
         <if test="payTimeStart != null and payTimeStart != '' and payTimeEnd != null and payTimeEnd != ''">
@@ -124,7 +125,7 @@
             od.goods_code goodsId,
             od.goods_num goodsNumber,
             od.goods_price goodsPrice,
-            so.version version
+            so.version
         from t_sys_order so
         left join t_order_detail od on so.order_code = od.order_code
         left join t_sys_goods tg on od.goods_code = tg.goods_code

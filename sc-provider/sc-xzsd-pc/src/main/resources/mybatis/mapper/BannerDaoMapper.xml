@@ -3,7 +3,7 @@
 <mapper namespace="com.xzsd.pc.banner.dao.BannerDao">
 
     <!-- 统计轮播图各个排序数量 -->
-    <select id="countBannerNO" parameterType="int" resultType="int">
+    <select id="countBannerNO" resultType="int">
         select count(1)
         from t_sys_banner a
         left join t_sys_banner b on a.banner_no = b.banner_no
@@ -40,7 +40,7 @@
         and b.state = 1
     </select>
 
-    <!-- 检测选择轮播图是否存在排序重复 -->
+    <!-- 检测选择轮播图中是否存在排序重复 -->
     <select id="countSameNO" resultType="int">
         SELECT
             count( * ) AS count
@@ -53,8 +53,6 @@
         </foreach>
         GROUP BY
             banner_no
-        HAVING
-            count > 1
         ORDER BY
             count DESC
             LIMIT 1

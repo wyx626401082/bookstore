@@ -47,7 +47,7 @@ public class OrderService {
         List<Integer> stateList = orderDao.countOrderState(listId);
         for( int i = 0 ; i < stateList.size(); i++ ) {
             if(GlobalClass.beCancelled == stateList.get(i)){
-                return AppResponse.paramError("存在已取消订单，请重新选择！");
+                return AppResponse.paramError("存在已取消订单或已完成，请重新选择！");
             }
         }
         //以订单id为key，版本号为value存入Map
@@ -119,7 +119,7 @@ public class OrderService {
         }
         //列表查询
         List<OrderVO> orderVOList = orderDao.listOrderByPage(orderDO);
-        return AppResponse.success("查询成功！", getPageInfo(orderVOList));
+        return AppResponse.success("查询订单列表成功！", getPageInfo(orderVOList));
     }
 
     /**

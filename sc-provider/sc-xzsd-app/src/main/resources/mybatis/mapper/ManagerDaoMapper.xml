@@ -75,19 +75,19 @@
 
     <select id="findOrderById" parameterType="java.lang.String" resultMap="findOrderMap">
         select
-        so.order_code,
-        so.order_state,
-        so.order_money,
-        so.version,
-        su.user_name,
-        su.phone,
-        ss.store_name,
-        concat_ws('',sp.dic_name,sc.dic_name,sy.dic_name,ss.store_address) store_address,
-        DATE_FORMAT(so.create_time,'%Y-%m-%d %H:%i:%s') create_time,
-        od.goods_code,
-        od.goods_price,
-        od.goods_num,
-        sg.goods_image
+            so.order_code,
+            so.order_state,
+            so.order_money,
+            so.version,
+            su.user_name,
+            su.phone,
+            ss.store_name,
+            concat_ws('',sp.dic_name,sc.dic_name,sy.dic_name,ss.store_address) store_address,
+            DATE_FORMAT(so.create_time,'%Y-%m-%d %H:%i:%s') create_time,
+            od.goods_code,
+            od.goods_price,
+            od.goods_num,
+            sg.goods_image
         from t_sys_order so
         left join t_sys_user su on su.user_code = so.buyer_code
         left join t_sys_store ss on ss.store_code = so.store_code
@@ -112,7 +112,8 @@
         left join t_sys_dictionary sp on sp.dic_code = ss.province_code
         left join t_sys_dictionary sc on sc.dic_code = ss.city_code
         left join t_sys_dictionary sy on sy.dic_code = ss.county_code
-        where su.user_code = #{userId}
+        where
+            su.user_code = #{userId}
     </select>
 
     <!-- 查询司机信息 -->
@@ -126,6 +127,7 @@
         where ss.is_deleted = 0
         and tu.is_deleted = 0
         and ss.user_code = #{userId}
+        and tu.role = 3
     </select>
 
     <!-- 修改订单状态 -->
@@ -143,11 +145,11 @@
         <if test='orderState == "5"'>
             order_state = 5,
         </if>
-        modify_by = #{userId},
-        modify_time = now(),
-        version = version + 1
+            modify_by = #{userId},
+            modify_time = now(),
+            version = version + 1
         where
-        order_code = #{orderId}
+            order_code = #{orderId}
         and version = #{version}
         <if test='orderState == "5"'>
             and order_state &lt;&gt; 5
@@ -163,6 +165,7 @@
             sg.modify_by = #{userId},
             sg.modify_time = now(),
             sg.version = sg.version + 1
-        where sd.order_code = #{orderId}
+        where
+            sd.order_code = #{orderId}
     </update>
 </mapper>

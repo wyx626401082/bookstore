@@ -224,4 +224,5 @@ public class OrderDO {
     public void setVersion(int version) {
         this.version = version;
     }
+
 }

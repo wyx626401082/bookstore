@@ -31,7 +31,7 @@ public interface OrderDao {
      * @param userId 当前用户编号
      * @return
      */
-    int updateGoodsInventory(@Param("orderDTOList") List<OrderDTO> orderDTOList, @Param("userId") String userId);
+    int updateInventoryAtAdd(@Param("orderDTOList") List<OrderDTO> orderDTOList, @Param("userId") String userId);
 
     /**
      * 更新商品库存（修改）
@@ -39,7 +39,7 @@ public interface OrderDao {
      * @param userId 当前用户编号
      * @return
      */
-    int updateInventory(@Param("orderId") String orderId, @Param("userId") String userId);
+    int updateInventoryAtModify(@Param("orderId") String orderId, @Param("userId") String userId);
 
     /**
      * 更新商品销售量
@@ -56,14 +56,6 @@ public interface OrderDao {
      * @return
      */
     int updateGoodsStarLevel(@Param("listId") List<String> listId, @Param("userId") String userId);
-
-    /**
-     * 更新商品浏览量
-     * @param listId 商品编号集合
-     * @param userId 当前用户编号
-     * @return
-     */
-    int updateGoodsViews(@Param("listId") List<String> listId, @Param("userId") String userId);
 
     /**
      * 删除购物车

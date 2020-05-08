@@ -6,6 +6,7 @@ import com.xzsd.pc.goods.dao.GoodsDao;
 import com.xzsd.pc.goods.entity.ClassifyVO;
 import com.xzsd.pc.goods.entity.GoodsDO;
 import com.xzsd.pc.goods.entity.GoodsVO;
+import com.xzsd.pc.utils.GlobalClass;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
@@ -41,7 +42,7 @@ public class GoodsService {
         if(null != goodsDO.getBookId() && !"".equals(goodsDO.getBookId())){
             int countBookId = goodsDao.countSameGoods(goodsDO);
             if(0 != countBookId) {
-                return AppResponse.paramError("该书号已存在，请重新输入");
+                return AppResponse.paramError("该书号已存在，请重新输入！");
             }
         }
         //新增商品
@@ -62,7 +63,7 @@ public class GoodsService {
      */
     @Transactional(rollbackFor = Exception.class)
     public AppResponse deleteGoods(String goodsId, String userId) {
-        AppResponse appResponse = AppResponse.success("删除商品成功");
+        AppResponse appResponse = AppResponse.success("删除商品成功！");
         List<String> listId = Arrays.asList(goodsId.split(","));
         //查询商品中是否在已启用轮播图中存在
         int countBanner = goodsDao.countBannerId(listId);
@@ -79,7 +80,7 @@ public class GoodsService {
         //删除商品
         int count = goodsDao.deleteGoods(listId,userId);
         if(0 == count) {
-            appResponse = AppResponse.bizError("删除商品失败");
+            appResponse = AppResponse.bizError("删除商品失败！");
         }
         return appResponse;
     }
@@ -92,11 +93,15 @@ public class GoodsService {
      * @date 2020-03-30
      */
     public AppResponse updateGoodsById(GoodsDO goodsDO) {
+        //查询商品状态
+        if(GlobalClass.shelves == goodsDO.getGoodsState()) {
+            return AppResponse.paramError("已上架商品无法修改，请重新选择！");
+        }
         //检测是否存在书号相同
         if(null != goodsDO.getBookId() && !"".equals(goodsDO.getBookId())){
             int countBookId = goodsDao.countSameGoods(goodsDO);
             if(0 != countBookId) {
-                return AppResponse.paramError("该书号已存在，请重新输入");
+                return AppResponse.paramError("该书号已存在，请重新输入！");
             }
         }
         //修改商品信息
@@ -104,7 +109,7 @@ public class GoodsService {
         if(0 == count) {
             return AppResponse.versionError("数据有变化，请刷新！");
         }
-        return AppResponse.success("修改商品信息成功");
+        return AppResponse.success("修改商品信息成功！");
     }
 
     /**
@@ -137,7 +142,7 @@ public class GoodsService {
         if(num > count) {
             return AppResponse.versionError("数据有变化，请刷新！");
         }
-        return AppResponse.success("修改商品状态成功");
+        return AppResponse.success("修改商品状态成功！");
     }
 
     /**
@@ -150,9 +155,9 @@ public class GoodsService {
     public AppResponse findGoodsById(String goodsId) {
         GoodsVO goodsVO = goodsDao.findGoodsById(goodsId);
         if (goodsVO == null) {
-            return AppResponse.notFound("无查询结果");
+            return AppResponse.notFound("无查询结果！");
         }
-        return AppResponse.success("查询商品详情成功", goodsVO);
+        return AppResponse.success("查询商品详情成功！", goodsVO);
     }
 
     /**

@@ -36,10 +36,15 @@ public class ShoppingCartService {
         //新生成购物车编号
         shoppingCartDO.setShoppingCartId(StringUtil.getCommonCode(2));
         shoppingCartDO.setIsDeleted(0);
-        //检测商品是否存在
+        //检测是否存在商品
         int countGoods = shoppingCartDao.countGoodsNum(shoppingCartDO.getGoodsId());
         if(0 == countGoods) {
             return AppResponse.paramError("商品不存在，请重新选择！");
+        }
+        //检测商品在购物车中是否存在重复
+        int countGoodsAtCart = shoppingCartDao.countGoodsNumAtCart(shoppingCartDO.getGoodsId(), shoppingCartDO.getUserId());
+        if(0 != countGoodsAtCart) {
+            return AppResponse.paramError("商品在购物车中已存在，请重新选择！");
         }
         //新增购物车
         int count = shoppingCartDao.addShoppingCart(shoppingCartDO);
@@ -74,7 +79,7 @@ public class ShoppingCartService {
      */
     @Transactional(rollbackFor = Exception.class)
     public AppResponse updateShoppingCart(ShoppingCartDO shoppingCartDO) {
-        AppResponse appResponse = AppResponse.success("修改购物车商品数量成功");
+        AppResponse appResponse = AppResponse.success("修改购物车商品数量成功!");
         //修改购物车商品数量
         int count = shoppingCartDao.updateShoppingCart(shoppingCartDO);
         if(0 == count) {

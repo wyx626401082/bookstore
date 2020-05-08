@@ -5,26 +5,27 @@
     <!-- 查询客户列表 -->
     <select id="listCustomerByPage" parameterType="com.xzsd.pc.customer.entity.CustomerInfo" resultType="com.xzsd.pc.customer.entity.CustomerInfo">
         select
-            user_code customerId,
-            user_acct customerAcct,
-            user_name customerName,
-            sex,
-            phone,
-            email,
-            id_card idCard
-        from t_sys_user
-        where is_deleted = 0
-        and role = 4
+            tu.user_code customerId,
+            tu.user_acct customerAcct,
+            tu.user_name customerName,
+            tu.sex,
+            tu.phone,
+            tu.email,
+            tu.id_card idCard
+        from t_sys_user tu
+        left join t_sys_customer tc on tu.user_code = tc.user_code
+        where tu.is_deleted = 0
+        and tu.role = 4
         <if test="customerAcct != null and customerAcct != ''">
-            and user_acct like concat('%', #{customerAcct}, '%')
+            and tu.user_acct like concat('%', #{customerAcct}, '%')
         </if>
         <if test="customerName != null and customerName != ''">
-            and user_name like concat('%', #{customerName}, '%')
+            and tu.user_name like concat('%', #{customerName}, '%')
         </if>
         <if test="role == 2">
-            and invite_code = #{inviteCode}
+            and tc.invite_code = #{inviteCode}
         </if>
-        order by create_time desc
+        order by tu.create_time desc
     </select>
 
     <!-- 通过店长用户编号查询门店邀请码 -->
@@ -33,6 +34,6 @@
             invite_code
         from t_sys_store
         where is_deleted = 0
-        user_code = #{userId}
+        and user_code = #{userId}
     </select>
 </mapper>

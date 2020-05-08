@@ -68,7 +68,7 @@ public class CustomerService {
     }
 
     /**
-     * 查询客户信息
+     * 查询客户门店信息
      * @param userId 客户编号（用户编号）
      * @return
      * @author WangZeBin

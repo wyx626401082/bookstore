@@ -31,6 +31,10 @@ public class GoodsVO {
      */
     private String inventory;
     /**
+     * 商品星级评分
+     */
+    private String starLevel;
+    /**
      * 商品销售量
      */
     private String goodsSales;
@@ -109,6 +113,14 @@ public class GoodsVO {
 
     public void setGoodsSales(String goodsSales) {
         this.goodsSales = goodsSales;
+    }
+
+    public String getStarLevel() {
+        return starLevel;
+    }
+
+    public void setStarLevel(String starLevel) {
+        this.starLevel = starLevel;
     }
 
     public String getGoodsViews() {

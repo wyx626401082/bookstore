@@ -6,16 +6,20 @@
     <select id="countUserAcct" parameterType="com.xzsd.app.customer.entity.CustomerDO" resultType="int">
         select count(user_acct)
         from t_sys_user
-        where is_deleted = 0
-        and user_acct = #{userAcct}
+        where
+            is_deleted = 0
+        and
+            user_acct = #{userAcct}
     </select>
 
     <!-- 查询邀请码是否存在 -->
     <select id="countInviteCode" parameterType="java.lang.String" resultType="int">
         select count(store_code)
         from t_sys_store
-        where invite_code = #{inviteCode}
-        and is_deleted = 0
+        where
+            invite_code = #{inviteCode}
+        and
+            is_deleted = 0
     </select>
 
     <!-- 注册（新增用户信息） -->
@@ -98,7 +102,9 @@
             modify_by = #{userId},
             modify_time = now(),
             version = version+1
-        where user_code = #{userId}
-        and is_deleted = 0
+        where
+            user_code = #{userId}
+        and
+            is_deleted = 0
     </update>
 </mapper>

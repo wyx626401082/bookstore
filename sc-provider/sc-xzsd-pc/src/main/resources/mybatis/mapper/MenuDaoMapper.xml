@@ -76,19 +76,19 @@
 
     <!-- 查询菜单列表 -->
     <select id="listMenu" parameterType="int" resultType="com.xzsd.pc.menu.entity.MenuVO">
-            select
+        select
             menu_code menuId,
             menu_name menuName,
             menu_url menuUrl,
             remark,
             version
-            from t_sys_menu
-            where
+        from t_sys_menu
+        where
             is_deleted = 0
-            <if test="role == 2">
-                and access_level = 2
-            </if>
-            order by create_time asc
+        <if test="role == 2">
+            and access_level = 2
+        </if>
+        order by create_time asc
     </select>
 
     <!-- 查询菜单详情 -->

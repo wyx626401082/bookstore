@@ -11,8 +11,10 @@
             role,
             version
         from t_sys_user
-        where is_deleted = 0
-        and user_code = #{userId}
+        where
+            is_deleted = 0
+        and
+            user_code = #{userId}
     </select>
 
     <!-- 查询原密码及角色信息 -->
@@ -21,8 +23,10 @@
             user_pwd oldPassword,
             role
         from t_sys_user
-        where is_deleted = 0
-        and user_code = #{userId}
+        where
+            is_deleted = 0
+        and
+            user_code = #{userId}
     </select>
 
     <!-- 修改用户密码 -->
@@ -35,7 +39,7 @@
         where is_deleted = 0
         and user_code = #{userId}
         <if test="role == 2 or role == 3">
-            version = #{version}
+            and version = #{version}
         </if>
     </update>
 </mapper>

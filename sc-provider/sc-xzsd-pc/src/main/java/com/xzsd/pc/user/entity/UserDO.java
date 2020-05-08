@@ -228,7 +228,7 @@ public class UserDO {
     }
 
     public void setModifyBy(String modifyBy) {
-        modifyBy = modifyBy;
+        this.modifyBy = modifyBy;
     }
 
     public int getVersion() {

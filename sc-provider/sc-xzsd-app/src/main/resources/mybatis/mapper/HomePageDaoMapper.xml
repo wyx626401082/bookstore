@@ -20,8 +20,10 @@
         select
             dic_value
         from t_sys_dictionary
-        where is_deleted = 0
-        and dic_code = '202004141833'
+        where
+            is_deleted = 0
+        and
+            dic_code = '202004141833'
     </select>
 
     <!-- 查询首页热门商品列表 -->
@@ -34,8 +36,10 @@
             tg.goods_image goodsUrl
         from t_goods_host th
         left join t_sys_goods tg on th.goods_code = tg.goods_code
-        where th.is_deleted = 0
-        and tg.is_deleted = 0
+        where
+            th.is_deleted = 0
+        and
+            tg.is_deleted = 0
         order by th.host_no asc
         limit #{showNumber}
     </select>

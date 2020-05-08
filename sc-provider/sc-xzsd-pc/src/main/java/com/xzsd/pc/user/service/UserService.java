@@ -36,6 +36,11 @@ public class UserService {
      */
     @Transactional(rollbackFor = Exception.class)
     public AppResponse addUser(UserDO userDO) {
+        //用户操作权限验证
+        int userRole = userDao.findUserRole(userDO.getCreateBy());
+        if(userRole >= userDO.getRole()) {
+            return AppResponse.paramError("无操作权限！");
+        }
         //新生成用户编号
         userDO.setUserId(StringUtil.getCommonCode(2));
         //检测账号是否存在
@@ -71,6 +76,14 @@ public class UserService {
     public AppResponse deleteUser(String userId, String userCode) {
         List<String> listId = Arrays.asList(userId.split(","));
         AppResponse appResponse = AppResponse.success("删除成功！");
+        //用户操作权限验证
+        int userRole = userDao.findUserRole(userCode);
+        List<Integer> roleList = userDao.findUserRoleOnList(listId);
+        for (int i = 0; i < roleList.size(); i++) {
+            if(userRole >= roleList.get(i)) {
+                return AppResponse.paramError("无操作权限！");
+            }
+        }
         //删除用户
         int count = userDao.deleteUser(listId,userCode);
         if(0 == count) {
@@ -89,10 +102,15 @@ public class UserService {
     @Transactional(rollbackFor = Exception.class)
     public AppResponse updateUserById(UserDO userDO) {
         AppResponse appResponse = AppResponse.success("修改成功");
+        //用户操作权限验证
+        int userRole = userDao.findUserRole(userDO.getModifyBy());
+        if(userRole >= userDO.getRole()) {
+            return AppResponse.paramError("无操作权限！");
+        }
         //检测账号是否存在
         int countUserAcct = userDao.countUserAcct(userDO);
         if(0 != countUserAcct) {
-            return AppResponse.success("用户账号已存在，请重新输入！");
+            return AppResponse.paramError("用户账号已存在，请重新输入！");
         }
         //角色验证
         int role = userDO.getRole();
@@ -100,8 +118,13 @@ public class UserService {
             return AppResponse.paramError("用户角色输入错误，请重新输入");
         }
         //用户密码加密处理
-        String pwd = PasswordUtils.generatePassword(userDO.getUserPwd());
-        userDO.setUserPwd(pwd);
+        if(!"".equals(userDO.getUserPwd()) && null != userDO.getUserPwd()) {
+            String oldPwd = userDao.findUserPwd(userDO.getUserId());
+            if(!oldPwd.equals(userDO.getUserPwd())) {
+                String pwd = PasswordUtils.generatePassword(userDO.getUserPwd());
+                userDO.setUserPwd(pwd);
+            }
+        }
         //修改用户信息
         int count = userDao.updateUserById(userDO);
         if(0 == count) {
@@ -120,7 +143,7 @@ public class UserService {
      */
     public AppResponse listUser(UserDO userDO) {
         List<UserVO> userVOList = userDao.listUserByPage(userDO);
-        return AppResponse.success("查询成功！", getPageInfo(userVOList));
+        return AppResponse.success("查询用户列表成功！", getPageInfo(userVOList));
     }
 
     /**

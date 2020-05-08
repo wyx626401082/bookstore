@@ -7,7 +7,17 @@
         select count(goods_code)
         from t_sys_goods
         where is_deleted = 0
+        and goods_code = #{goodsId}
         and state = 1
+    </select>
+
+    <!-- 统计商品在购物车中的数量 -->
+    <select id="countGoodsNumAtCart" parameterType="java.lang.String" resultType="int">
+        select count(goods_code)
+        from t_shopping_cart
+        where is_deleted = 0
+        and goods_code = #{goodsId}
+        and user_code = #{userId}
     </select>
 
     <!-- 新增购物车 -->
@@ -56,8 +66,10 @@
             modify_by = #{modifyBy},
             modify_time = now(),
             version = version + 1
-        where cart_code = #{shoppingCartId}
-        and is_deleted = 0
+        where
+            cart_code = #{shoppingCartId}
+        and
+            is_deleted = 0
     </update>
 
     <!-- 查询购物车列表 -->

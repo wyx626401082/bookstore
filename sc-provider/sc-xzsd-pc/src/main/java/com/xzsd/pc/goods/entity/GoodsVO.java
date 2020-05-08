@@ -75,7 +75,7 @@ public class GoodsVO {
      */
     private String introduce;
     /**
-     * 商品状态（0未发布 1上架 2下架 ）
+     * 商品状态（0未发布 1上架 2下架 3售罄）
      */
     private int goodsState;
     /**

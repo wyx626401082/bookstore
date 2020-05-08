@@ -6,6 +6,7 @@ import com.xzsd.pc.banner.dao.BannerDao;
 import com.xzsd.pc.banner.entity.BannerDO;
 import com.xzsd.pc.banner.entity.BannerVO;
 import com.xzsd.pc.banner.entity.GoodsVO;
+import com.xzsd.pc.utils.GlobalClass;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -87,10 +88,10 @@ public class BannerService {
             versionMap.put(listId.get(i),intVersion);
         }
         //轮播图启用检测
-        if(1 == bannerState) {
+        if(GlobalClass.enable == bannerState) {
             //检测选择的轮播图是否存在排序重复
             int countSameNO = bannerDao.countSameNO(listId);
-            if(1 < countSameNO) {
+            if(1 != countSameNO) {
                 return AppResponse.paramError("选择的轮播图中存在排序重复，请重新选择！");
             }
             //检验在已启用轮播图排序是否存在

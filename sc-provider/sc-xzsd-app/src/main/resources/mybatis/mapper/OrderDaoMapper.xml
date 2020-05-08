@@ -17,7 +17,7 @@
     <!-- 查询订单中商品数量 -->
     <select id="countOrderGoods" resultType="int">
         select
-        count(goods_code)
+            count(goods_code)
         from t_order_detail
         where order_code = #{orderId}
     </select>
@@ -87,7 +87,7 @@
     </insert>
 
     <!-- 更新商品库存、浏览量(新增) -->
-    <update id="updateGoodsInventory">
+    <update id="updateInventoryAtAdd">
         update t_sys_goods
         set
             goods_views = goods_views + 1,
@@ -98,7 +98,7 @@
         <foreach collection="orderDTOList" item="item" index="index" open="case goods_code" separator=" " close="end,">
             when #{item.goodsId} then #{item.goodsNumber}
         </foreach>
-            state = case inventory when 0 then 3
+            state = case inventory when 0 then 3 else state end
         where goods_code in
         <foreach collection="orderDTOList" item="item" index="index" open="(" separator="," close=")">
             #{item.goodsId}
@@ -106,7 +106,7 @@
     </update>
 
     <!-- 更新商品库存(修改) -->
-    <update id="updateInventory" parameterType="java.lang.String">
+    <update id="updateInventoryAtModify" parameterType="java.lang.String">
         update t_sys_goods sg
         left join t_order_detail sd on sg.goods_code = sd.goods_code
         set
@@ -117,7 +117,7 @@
         where sd.order_code = #{orderId}
     </update>
 
-    <!-- 更新商品库存(修改) -->
+    <!-- 更新商品销售量(修改) -->
     <update id="updateSalesNum" parameterType="java.lang.String">
         update t_sys_goods sg
         left join t_order_detail sd on sg.goods_code = sd.goods_code
@@ -132,15 +132,14 @@
     <!-- 更新商品评价星级 -->
     <update id="updateGoodsStarLevel" parameterType="java.lang.String">
         UPDATE t_sys_goods sg
-        SET sg.star_level = (
-            SELECT
+        SET sg.star_level =
+            (SELECT
                 round( avg( ge.star_level ), 0 )
             FROM
                 t_goods_evaluate ge
             WHERE
                 ge.is_deleted = 0
-                AND ge.goods_code = sg.goods_code
-            ),
+                AND ge.goods_code = sg.goods_code),
             sg.modify_by = #{userId},
             sg.modify_time = now(),
             sg.version = sg.version + 1
@@ -153,10 +152,11 @@
     <!-- 删除购物车 -->
     <update id="deleteShoppingCart" parameterType="java.lang.String">
         update t_shopping_cart
-        set is_deleted = 1,
-        modify_by = #{userId},
-        modify_time = now(),
-        version = version + 1
+        set
+            is_deleted = 1,
+            modify_by = #{userId},
+            modify_time = now(),
+            version = version + 1
         where cart_code in
         <foreach item="item" index="index" collection="listId" open="(" separator="," close=")">
             #{item}
@@ -249,8 +249,10 @@
         left join t_sys_dictionary sp on sp.dic_code = ss.province_code
         left join t_sys_dictionary sc on sc.dic_code = ss.city_code
         left join t_sys_dictionary sy on sy.dic_code = ss.county_code
-        where so.is_deleted = 0
-        and so.order_code = #{orderId}
+        where
+            so.is_deleted = 0
+        and
+            so.order_code = #{orderId}
         order by sd.goods_code desc
     </select>
 

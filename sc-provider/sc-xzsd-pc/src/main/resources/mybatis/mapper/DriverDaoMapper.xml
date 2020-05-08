@@ -145,10 +145,13 @@
             tu.version version
         from t_sys_user tu
         left join t_sys_driver td on tu.user_code = td.user_code
-        left join (select * from t_sys_store where is_deleted = 0) ts 
-                on td.store_code = ts.store_code 
+        <if test="role == 2">
+            left join (select * from t_sys_store where is_deleted = 0) ts
+            on td.county_code = ts.county_code
+        </if>
         where tu.is_deleted = 0
         and td.is_deleted = 0
+        and tu.role = 3
         <if test="driverId != null and driverId != ''">
             and tu.user_code = #{driverId}
         </if>

@@ -11,6 +11,30 @@
         and user_code &lt;&gt; #{userId}
     </select>
 
+    <!-- 查询用户密码 -->
+    <select id="findUserPwd" parameterType="java.lang.String" resultType="java.lang.String">
+        select user_pwd
+        from t_sys_user
+        where user_code = #{userId}
+    </select>
+
+    <!-- 查询用户角色 -->
+    <select id="findUserRole" parameterType="java.lang.String" resultType="java.lang.Integer">
+        select role
+        from t_sys_user
+        where user_code = #{userId}
+    </select>
+
+    <!-- 查询用户角色 -->
+    <select id="findUserPwdOnList" resultType="int">
+        select role
+        from t_sys_user
+        where user_code in
+        <foreach item="item" index="index" collection="listId" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
     <!--新增用户-->
     <insert id="addUser" parameterType="com.xzsd.pc.user.entity.UserDO">
         insert into t_sys_user
@@ -80,7 +104,7 @@
         <if test="userImage != null and userImage != ''">
             user_image_url = #{userImage},
         </if>
-        <if test="sex != null and sex != ''">
+        <if test="sex == 0 or sex == 1">
             sex = #{sex},
         </if>
         <if test="phone != null and phone != ''">
@@ -126,7 +150,7 @@
         <if test="userName != null and userName != ''">
             and user_name like concat('%', #{userName}, '%')
         </if>
-        <if test="role != null and role != ''">
+        <if test="role != 0">
             and role = #{role}
         </if>
         order by create_time desc
@@ -160,5 +184,4 @@
         where user_code = #{userId}
         and is_deleted = 0
     </select>
-
 </mapper>

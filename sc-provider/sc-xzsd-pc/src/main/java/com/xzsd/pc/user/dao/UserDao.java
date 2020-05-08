@@ -21,11 +21,25 @@ public interface UserDao {
     int countUserAcct(UserDO userDO);
 
     /**
-     * 查询版本号
+     * 查询用户密码
      * @param userId 用户编号
      * @return
      */
-    int findVersion(String userId);
+    String findUserPwd(@Param("userId") String userId);
+
+    /**
+     * 查询用户密码
+     * @param listId 用户编号集合
+     * @return
+     */
+    List<Integer> findUserRoleOnList(@Param("listId") List<String> listId);
+
+    /**
+     * 查询用户角色
+     * @param userId 用户编号
+     * @return
+     */
+    int findUserRole(@Param("userId") String userId);
 
     /**
      *新增用户信息

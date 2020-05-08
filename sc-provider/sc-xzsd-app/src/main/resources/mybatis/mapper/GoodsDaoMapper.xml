@@ -10,6 +10,7 @@
             goods_image goodsUrl,
             goods_price goodsPrice,
             sales_num goodsSales,
+            star_level starLevel,
             goods_views goodsViews,
             inventory,
             advertise,
@@ -17,8 +18,10 @@
             author,
             press
         from t_sys_goods
-        where is_deleted = 0
-        and goods_code = #{goodsId}
+        where
+            is_deleted = 0
+        and
+            goods_code = #{goodsId}
     </select>
 
     <!-- 查询商品评价列表 -->
@@ -46,7 +49,7 @@
         left join t_evaluate_image ti on te.evaluate_code = ti.evaluate_code
         left join t_sys_user tu on te.user_code = tu.user_code
         where te.is_deleted = 0
-        and te.goods_code = #{goodsId}
+            and te.goods_code = #{goodsId}
         <if test='evaluateType == "5"'>
             and te.star_level &gt; 3
         </if>
@@ -66,8 +69,10 @@
             class_code classOneId,
             class_name classOneName
         from t_goods_classify
-        where is_deleted = 0
-        and parent_code = 0
+        where
+            is_deleted = 0
+        and
+            parent_code = 0
         order by create_time desc
     </select>
     
@@ -94,8 +99,10 @@
         from t_goods_classify tc
         left join (select * from t_sys_goods where is_deleted = 0 and state = 1) tg
             on tc.class_code = tg.class_two_code
-        where tc.is_deleted = 0
-        and parent_code = #{classOneId}
+        where
+            tc.is_deleted = 0
+        and
+            parent_code = #{classOneId}
         order by tc.create_time desc,
             tg.create_time desc
     </select>

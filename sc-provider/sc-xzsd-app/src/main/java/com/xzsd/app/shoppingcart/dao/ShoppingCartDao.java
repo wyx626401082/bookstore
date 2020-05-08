@@ -20,6 +20,14 @@ public interface ShoppingCartDao {
     int countGoodsNum(@Param("goodsId") String goodsId);
 
     /**
+     * 统计商品在购物车中的数量
+     * @param goodsId 商品编号
+     * @param userId 用户编号
+     * @return
+     */
+    int countGoodsNumAtCart(@Param("goodsId") String goodsId, @Param("userId") String userId);
+
+    /**
      * 新增购物车
      * @param shoppingCartDO 购物车信息
      * @return
